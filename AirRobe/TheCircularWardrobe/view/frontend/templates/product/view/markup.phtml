@@ -1,7 +1,16 @@
 <div>
-	<input type="checkbox" name="markup" id="markup" />
-	<label for="markup">
-		<?php echo "Markup"; ?>
+	<script type="text/javascript">
+		document.addEventListener('DOMContentLoaded', function() {
+			console.log("Running init code");
+			document.getElementById('airrobe-checkbox').addEventListener('click', function(event) {
+				var cookieVal = event.target.checked ? "Yes" : "No";
+				console.log("setting cookie to " + cookieVal);
+				document.cookie = "airRobeOptInState=" + cookieVal
+			})
+		});
+	</script>
+	<input type="checkbox" name="airrobe-checkbox" id="airrobe-checkbox" />
+	<label for="airrobe-checkbox">
+		<?php echo "Add to my circular wardrobe"; ?>
 	</label>
-	
 </div>
