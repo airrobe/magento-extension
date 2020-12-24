@@ -12,6 +12,9 @@ use Magento\Catalog\Model\Product;
 
 class Markup extends \Magento\Framework\View\Element\Template
 {
+	const COOKIE_NAME = 'airRobeOptInState';
+	
+    protected $_cookieManager;
     /**
      * @var Product
      */
@@ -32,10 +35,18 @@ class Markup extends \Magento\Framework\View\Element\Template
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         \Magento\Framework\Registry $registry,
+		\Magento\Framework\Stdlib\CookieManagerInterface $cookieManager,
         array $data = []
     ) {
         $this->_coreRegistry = $registry;
+		$this->_cookieManager = $cookieManager;    
         parent::__construct($context, $data);
+    }
+	
+	 public function getCookieData() {
+	 	
+        $result = $this->_cookieManager->getCookie(self::COOKIE_NAME);
+        return $result;
     }
 
     
