@@ -28,7 +28,7 @@ class Data extends AbstractHelper
 		return $this->getConfigValue(self::XML_PATH_IMPORTEXPORT .'general/'. $code, $storeId);
 	}
 	
-	public function ProcessMagentoOrder($orderData)
+	public function ProcessMagentoOrder($orderData,$optedIn)
 	{
 				
 		$items =  array();
@@ -63,7 +63,7 @@ class Data extends AbstractHelper
 		$body = '{"query": "mutation ProcessMagentoOrder($input: CreateMagentoOrderMutationInput!){ createMagentoOrder(input: $input) { order { id } } }",
 					"variables": {
 						"input": {
-							"optedIn": true,
+							"optedIn": '.$optedIn.',
 							"customer": {
 								"givenName": "'.$orderData['customer_name'].'",
 								"familyName": "'.$orderData['customer_name'].'",

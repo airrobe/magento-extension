@@ -49,37 +49,42 @@ class OrderBefore implements \Magento\Framework\Event\ObserverInterface
     public function execute(EventObserver $observer)
 	{	
 		$cookieData = $this->markup->getCookieData();
+		
+		$optedIn = false;
 				
 		if($cookieData=='Yes')
 		{
-			$order = $observer->getEvent()->getOrder();
-			$orderItems = $order->getAllItems();
-			$connection = $this->resourceConnection->getConnection();
-			
-			$orderDetails =  array();
-							
-			$orderDetails['email'] = $order->getCustomerEmail();
-			$orderDetails['currency'] = $order->getOrderCurrencyCode();
-			$orderDetails['order_id'] = $order->getIncrementId();
-			$orderDetails['country_code'] = $order->getShippingAddress()->getCountryId();			
-			$orderDetails['customer_name'] = $this->helperData->getCustomerName($order);
-			$orderDetails['order_completed_at'] = $order->getCreatedAt();
-						
-			$orderlines = array();
-			
-			foreach ($orderItems as $k => $item)
-			{			
-				$orderlines[$k]['sku']=$item->getSku();
-				$orderlines[$k]['product_name']=$item->getName();		
-				$orderlines[$k]['price']=$item->getPrice();		
-				$orderlines[$k]['qty']=$item->getQtyOrdered();											 			 						
-			}	
-			
-			$orderDetails['orderItems'] = $orderlines;
-					
-			$this->helperData->ProcessMagentoOrder($orderDetails); 				
-		
+			$optedIn = true;
 		}
+		
+		$order = $observer->getEvent()->getOrder();
+		$orderItems = $order->getAllItems();
+		$connection = $this->resourceConnection->getConnection();
+		
+		$orderDetails =  array();
+						
+		$orderDetails['email'] = $order->getCustomerEmail();
+		$orderDetails['currency'] = $order->getOrderCurrencyCode();
+		$orderDetails['order_id'] = $order->getIncrementId();
+		$orderDetails['country_code'] = $order->getShippingAddress()->getCountryId();			
+		$orderDetails['customer_name'] = $this->helperData->getCustomerName($order);
+		$orderDetails['order_completed_at'] = $order->getCreatedAt();
+					
+		$orderlines = array();
+		
+		foreach ($orderItems as $k => $item)
+		{			
+			$orderlines[$k]['sku']=$item->getSku();
+			$orderlines[$k]['product_name']=$item->getName();		
+			$orderlines[$k]['price']=$item->getPrice();		
+			$orderlines[$k]['qty']=$item->getQtyOrdered();											 			 						
+		}	
+		
+		$orderDetails['orderItems'] = $orderlines;
+				
+		$this->helperData->ProcessMagentoOrder($orderDetails,$optedIn); 				
+		
+		
 		
 	}
 }
