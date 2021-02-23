@@ -14,7 +14,17 @@ use Magento\Store\Model\ScopeInterface;
  
 class Data extends AbstractHelper
 {
+	protected $_logger;
+	
     const XML_PATH_ATCW = 'thecircularwardrobe/';
+	
+	public function __construct(
+        \Magento\Framework\App\Helper\Context $context,
+        \Psr\Log\LoggerInterface $logger
+    ) {
+        $this->_logger                  = $logger;
+        parent::__construct($context);
+    }
 
 	public function getConfigValue($field, $storeId = null)
 	{
@@ -44,7 +54,8 @@ class Data extends AbstractHelper
 		}
 		*/
 		foreach($orderData['orderItems'] as $k => $orderItem)
-		{
+		{						
+		
 			$items[$k]['title']= $orderItem['product_name'];
 			$items[$k]['description']= $orderItem['sku'];
 			$items[$k]['rrp']= $orderItem['price'];
@@ -52,15 +63,25 @@ class Data extends AbstractHelper
 			$items[$k]['currency']= 'AUD';
 			$items[$k]['brand']= "gucci";
 			$items[$k]['size']= "S";
-			$items[$k]['imageUrls']= [];
+			$items[$k]['imageUrls']= [$orderItem['image']];
 		}
 		
 		$lineItems =  json_encode($items);				
+		
 	
 		$curl = curl_init();
 		
+		if($optedIn==1) 
+		{
+			$optedIn = 'true';
+		}
+		else
+		{
+			$optedIn = 'false';
+		}
 		
-		$body = '{"query": "mutation ProcessMagentoOrder($input: CreateMagentoOrderMutationInput!){ createMagentoOrder(input: $input) { order { id } } }",
+		
+		$body = '{"query": "mutation ProcessMagentoOrder($input: CreateMagentoOrderMutationInput!){ createMagentoOrder(input: $input) { error order { id } } }",
 					"variables": {
 						"input": {
 							"optedIn": '.$optedIn.',
@@ -71,14 +92,17 @@ class Data extends AbstractHelper
 							},
 							"id": "'.$orderData['order_id'].'",
 							"store": {
-								"domain": "some-store-domain.com"
+								"domain": "'.$orderData['domain'].'"
 							},
 							"lineItems": '.$lineItems.'
 						}
 					}
 				}';
 				
-	
+				
+				
+		$this->_logger->addDebug("ORDER_INFO:".$body);
+		
 		curl_setopt_array($curl, array(
 		  CURLOPT_URL => 'https://michael.shopify-app.airrobe.com/graphql',
 		  CURLOPT_RETURNTRANSFER => true,
@@ -96,13 +120,13 @@ class Data extends AbstractHelper
 		
 		$response = curl_exec($curl);
 		
+		
+		
+		$this->_logger->addDebug("API_RESPO:".$response);
+		
 		curl_close($curl);
 		
-		/*echo "<pre>";
-		print_r($response);
-		exit;*/
 		
-		/*echo $response;*/
 	}
 	
 	public function getCustomerName($order)

@@ -43,10 +43,11 @@ class Markup extends \Magento\Framework\View\Element\Template
         parent::__construct($context, $data);
     }
 	
-	 public function getCookieData() {
-	 	
+	 public function getCookieData() {	 	 			
+	 	 											
         $result = $this->_cookieManager->getCookie(self::COOKIE_NAME);
         return $result;
+		
     }
 
     
