@@ -59,11 +59,13 @@ class Data extends AbstractHelper
 			$items[$k]['title']= $orderItem['product_name'];
 			$items[$k]['description']= $orderItem['sku'];
 			$items[$k]['rrp']= $orderItem['price'];
-			//$items[$k]['currency']= $orderData['currency'];
-			$items[$k]['currency']= 'AUD';
+			$items[$k]['currency']= $orderData['currency'];
+			/*$items[$k]['currency']= 'AUD';
 			$items[$k]['brand']= "gucci";
-			$items[$k]['size']= "S";
-			$items[$k]['imageUrls']= [$orderItem['image']];
+			$items[$k]['size']= "S";*/
+			$items[$k]['imageUrls']= $orderItem['image'];			
+			//$items[$k]= array_merge($items[$k],$orderItem['attributes']);
+			
 		}
 		
 		$lineItems =  json_encode($items);				
@@ -119,9 +121,7 @@ class Data extends AbstractHelper
 		));
 		
 		$response = curl_exec($curl);
-		
-		
-		
+					
 		$this->_logger->addDebug("API_RESPO:".$response);
 		
 		curl_close($curl);

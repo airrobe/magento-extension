@@ -37,6 +37,12 @@ class OrderAfter implements \Magento\Framework\Event\ObserverInterface
 	
 	
 	protected $_imageHelper;
+	
+	
+	protected $_gallery;
+	
+	
+	protected $_product;
     /**
      * @param Logger $logger
      */
@@ -50,7 +56,9 @@ class OrderAfter implements \Magento\Framework\Event\ObserverInterface
         \Magento\Framework\UrlInterface $urlInterface,
 		\Magento\Framework\App\ResourceConnection $resourceConnection,
 		\Magento\Catalog\Model\ProductRepository $productRepository,
-		\Magento\Catalog\Helper\Image $imageHelper
+		\Magento\Catalog\Helper\Image $imageHelper,
+		\Magento\Catalog\Model\Product\Gallery\ReadHandler $gallery,
+		\Magento\Catalog\Model\Product $product
     ) {
         $this->logger = $logger;
 		$this->helperData = $helperData;
@@ -62,10 +70,15 @@ class OrderAfter implements \Magento\Framework\Event\ObserverInterface
 		$this->resourceConnection = $resourceConnection;
 		$this->_productRepository = $productRepository;
 		$this->_imageHelper = $imageHelper;
+		$this->_gallery = $gallery;
+		$this->_product = $product;
     }
 
     public function execute(EventObserver $observer)
 	{	
+	
+		
+		
 		$cookieData = $this->markup->getCookieData();
 		
 		$optedIn = false;
@@ -97,13 +110,20 @@ class OrderAfter implements \Magento\Framework\Event\ObserverInterface
 		{			
 			
 			$product = $this->_productRepository->get($item->getSku());
+			
+			$images = $this->getImages($product->getId());						
+			$attributes = $this->getAttributes($product);
+			
+
 			$image_url = $this->_imageHelper->init($product, 'small_image')->setImageFile($product->getSmallImage())->resize(200, 200)->getUrl();
 			
 			$orderlines[$k]['sku']=$item->getSku();
 			$orderlines[$k]['product_name']=$item->getName();		
 			$orderlines[$k]['price']=$item->getPrice();		
 			$orderlines[$k]['qty']=$item->getQtyOrdered();											 			 						
-			$orderlines[$k]['image']=$image_url;											 			 									
+			$orderlines[$k]['image']=$images;	
+			$orderlines[$k]['attributes']=$attributes;							
+			
 		}	
 		
 		$orderDetails['orderItems'] = $orderlines;
@@ -112,4 +132,38 @@ class OrderAfter implements \Magento\Framework\Event\ObserverInterface
 		$this->helperData->ProcessMagentoOrder($orderDetails,$optedIn); 				
 		
 	}
+	public function getAttributes($product)
+	{
+		$attributes = $product->getAttributes();
+		$attrs=array();
+
+		foreach ($attributes as $attribute) { 											
+			$value = $attribute->getFrontend()->getValue($product);				
+			if(!is_object($value))
+			{					
+				$attrs[$attribute->getAttributeCode()]=$value;
+			}						
+		}
+		
+		return $attrs;
+	}
+	public function getImages($product_id)
+	{
+		
+		$mediaUrl =  $this->_storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+		$product = $this->_product->load($product_id);		
+		$this->_gallery->execute($product);
+		$images = $product->getMediaGalleryImages();
+		
+		$allImages = array();
+		foreach($images as $image){
+		 $allImages[] = $mediaUrl."/catalog/product".$image->getFile();
+		}
+		
+		
+		return $allImages;
+		
+	}
+	
+
 }
