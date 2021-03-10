@@ -63,9 +63,8 @@ class Data extends AbstractHelper
 			/*$items[$k]['currency']= 'AUD';
 			$items[$k]['brand']= "gucci";
 			$items[$k]['size']= "S";*/
-			$items[$k]['imageUrls']= $orderItem['image'];			
-			//$items[$k]= array_merge($items[$k],$orderItem['attributes']);
-			
+			$items[$k]['imageUrls']= $orderItem['image'];
+			$items[$k]['unmappedAttributes'] = $orderItem['attributes'];
 		}
 		
 		$lineItems =  json_encode($items);				
