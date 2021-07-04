@@ -1,6 +1,6 @@
 <?php
 //It will call our block which return cookie value
-$getCookieData = $block->getCookieData();    
+$getCookieData = $block->getCookieData();
 ?>
 <div>
 
@@ -12,12 +12,12 @@ document.addEventListener('DOMContentLoaded', function() {
 	document.getElementById('markup').addEventListener('click', function(event) {
 		var cookieVal = event.target.checked ? "Yes" : "No";
 		console.log("setting cookie to " + cookieVal);
-		document.cookie = "airRobeOptInState=" + cookieVal
+		document.cookie = "airRobeOptedInState=" + cookieVal
 	})
 });
 
-require(['jquery', 'jquery/ui'], function($){  			
-	jQuery(document).ready( function() {  	
+require(['jquery', 'jquery/ui'], function($){
+	jQuery(document).ready( function() {
 		function readCookie(name) {
 			var cookiename = name + "=";
 			var ca = document.cookie.split(';');
@@ -28,13 +28,13 @@ require(['jquery', 'jquery/ui'], function($){
 				if (c.indexOf(cookiename) == 0) return c.substring(cookiename.length,c.length);
 			}
 			return null;
-		}  
-		var is_Set = readCookie('airRobeOptInState');			
+		}
+		var is_Set = readCookie('airRobeOptedInState');
 		if(is_Set=='Yes')
 		{
 			document.getElementById("markup").checked = true;
-		}		
-  	}); 
+		}
+  	});
 });
 </script>
 
@@ -42,5 +42,5 @@ require(['jquery', 'jquery/ui'], function($){
 	<label for="markup">
 		<?php echo "Markup"; ?>
 	</label>
-	
+
 </div>

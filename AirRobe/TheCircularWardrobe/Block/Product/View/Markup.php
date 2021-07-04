@@ -12,8 +12,8 @@ use Magento\Catalog\Model\Product;
 
 class Markup extends \Magento\Framework\View\Element\Template
 {
-	const COOKIE_NAME = 'airRobeOptInState';
-	
+	const COOKIE_NAME = 'airRobeOptedInState';
+
     protected $_cookieManager;
     /**
      * @var Product
@@ -39,16 +39,16 @@ class Markup extends \Magento\Framework\View\Element\Template
         array $data = []
     ) {
         $this->_coreRegistry = $registry;
-		$this->_cookieManager = $cookieManager;    
+		$this->_cookieManager = $cookieManager;
         parent::__construct($context, $data);
     }
-	
-	 public function getCookieData() {	 	 			
-	 	 											
+
+	 public function getCookieData() {
+
         $result = $this->_cookieManager->getCookie(self::COOKIE_NAME);
         return $result;
-		
+
     }
 
-    
+
 }
