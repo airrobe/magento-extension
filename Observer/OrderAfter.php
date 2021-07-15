@@ -200,76 +200,6 @@ class OrderAfter implements \Magento\Framework\Event\ObserverInterface
     }, $item->getProductOptions()['attributes_info']);
   }
 
-  // Send a payload of data to the airrobe connector. Before sending we sign with an APP_ID taken
-  // from the config file, and a message signature generated using the HMAC algorithm and a secret
-  // token from the same config file. TODO: I understand that there are dedicated graphql classes
-  // that ship with magento, and it may make sense to start using these. But for now, this CURL
-  // approach is workable (and also avoids any potential compatability issues with our merchant
-  // partner stores)
-  protected function sendToAirRobeAPI($payload)
-  {
-    $url = $this->helperData->getApiUrl();
-    $appId = $this->helperData->getAppID();
-    $json_payload = json_encode($payload);
-    $signature = $this->helperData->getSignature($json_payload);
-
-    $this->_logger->debug("[AIRROBE] URL: " . $url);
-    $this->_logger->debug("[AIRROBE] APP_ID: " . $appId);
-    $this->_logger->debug("[AIRROBE] PAYLOAD: " . $json_payload);
-    $this->_logger->debug("[AIRROBE] SIGNATURE: " . $signature);
-
-    try {
-      $curl = curl_init();
-
-      if ($curl == false) {
-        throw new \Exception('Failed to initialize CURL');
-      }
-
-      curl_setopt_array($curl, [
-        CURLOPT_URL => $url,
-        CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => $json_payload,
-        CURLOPT_HTTPHEADER => [
-          'Content-Type: application/json',
-          'X-AIRROBE-APP-ID: ' . $appId,
-          'X-AIRROBE-HMAC-SHA256: ' . $signature,
-        ],
-      ]);
-
-      $response = curl_exec($curl);
-
-      if ($response === false) {
-        throw new \Exception(curl_error($curl), curl_errno($curl));
-      }
-
-      $this->_logger->debug("[AIRROBE] API_RESPONSE: " . json_encode($response));
-
-      curl_close($curl);
-    } catch (\Exception $e) {
-      trigger_error(
-        sprintf(
-          'Curl failed with error #%d: %s',
-          $e->getCode(),
-          $e->getMessage()
-        ),
-        E_USER_ERROR
-      );
-    }
-  }
-
-  protected function safelySendErrorDetailsToApi($e)
-  {
-    try {
-      sprintf(
-        'Curl failed with error #%d: %s',
-        $e->getCode(),
-        $e->getMessage()
-      );
-    } catch (\Exception $failsafeError) {
-      // Drop any errors here on the floor, in the worst case, we don't want to break our merchant
-      // partners' checkout flow.
-    }
-  }
 
   // Get a string representation of all categories for a given product, of the form
   // ["womens/bags/handbags", "special-events/all-events"]
@@ -309,5 +239,98 @@ class OrderAfter implements \Magento\Framework\Event\ObserverInterface
     }
 
     return implode("/", $categoryTreepath);
+  }
+
+  // Send a payload of data to the airrobe connector. Before sending we sign with an APP_ID taken
+  // from the config file, and a message signature generated using the HMAC algorithm and a secret
+  // token from the same config file. TODO: I understand that there are dedicated graphql classes
+  // that ship with magento, and it may make sense to start using these. But for now, this CURL
+  // approach is workable (and also avoids any potential compatability issues with our merchant
+  // partner stores)
+  protected function sendToAirRobeAPI($payload)
+  {
+    $url = $this->helperData->getApiUrl();
+    $appId = $this->helperData->getAppID();
+    $json_payload = json_encode($payload);
+    $signature = $this->helperData->getSignature($json_payload);
+
+    $this->_logger->debug("[AIRROBE] URL: " . $url);
+    $this->_logger->debug("[AIRROBE] APP_ID: " . $appId);
+    $this->_logger->debug("[AIRROBE] PAYLOAD: " . $json_payload);
+    $this->_logger->debug("[AIRROBE] SIGNATURE: " . $signature);
+
+    $headers = [
+      'Content-Type: application/json',
+      'X-AIRROBE-APP-ID: ' . $appId,
+      'X-AIRROBE-HMAC-SHA256: ' . $signature,
+    ];
+
+    $response = $this->curlPost($url, $json_payload, $headers);
+
+    $this->_logger->debug("[AIRROBE] API_RESPONSE: " . json_encode($response));
+  }
+
+  protected function curlPost($url, $string_payload, $headers = [])
+  {
+    try {
+      $curl = curl_init();
+
+      if ($curl == false) {
+        throw new \Exception('Failed to initialize CURL');
+      }
+
+      curl_setopt_array($curl, [
+        CURLOPT_URL => $url,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => $string_payload,
+        CURLOPT_HTTPHEADER => $headers,
+      ]);
+
+      $response = curl_exec($curl);
+
+      if ($response === false) {
+        throw new \Exception(curl_error($curl), curl_errno($curl));
+      }
+
+      curl_close($curl);
+
+      return $response;
+    } catch (\Exception $e) {
+      trigger_error(
+        sprintf(
+          'Curl failed with error #%d: %s',
+          $e->getCode(),
+          $e->getMessage()
+        ),
+        E_USER_ERROR
+      );
+    }
+  }
+
+  // If something goes wrong, WE want to know about it. This will trigger notifications in our
+  // systems.
+  protected function safelySendErrorDetailsToApi($e)
+  {
+    try {
+      $url = "https://shop.airrobe.com/widget_errors";
+      $payload = [
+        'name' => $e->getCode(),
+        'message' => $e->getMessage(),
+        'host' => $this->helperData->getBaseSiteUrl(),
+      ];
+      $this->curlPost($url, $payload);
+
+      // Finally, log the error to the application logs for additional visibility.
+      $this->_logger->debug(
+        sprintf(
+          '[AIRROBE] ERROR: #%d: %s',
+          $e->getCode(),
+          $e->getMessage()
+        )
+      );
+    } catch (\Exception $failsafeError) {
+      // Drop any errors here on the floor, as, in the worst case, we don't want to break our
+      // merchant partners' checkout flow.
+    }
   }
 }

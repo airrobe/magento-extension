@@ -20,6 +20,7 @@ class Data extends AbstractHelper
   const AIRROBE_API_URL = "airrobe/options/airrobe_api_url";
   const AIRROBE_APP_ID = "airrobe/options/airrobe_app_id";
   const AIRROBE_SECRET_TOKEN = "airrobe/options/airrobe_secret_token";
+  const BASE_SITE_URL = "web/unsecure/base_url";
 
   public function __construct(
     \Magento\Framework\App\Helper\Context $context,
@@ -62,5 +63,10 @@ class Data extends AbstractHelper
   public function getApiUrl()
   {
     return $this->getConfigValue(self::AIRROBE_API_URL);
+  }
+
+  public function getBaseSiteUrl()
+  {
+    return $this->getConfigValue(self::BASE_SITE_URL);
   }
 }
