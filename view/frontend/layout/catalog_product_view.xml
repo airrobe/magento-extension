@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+  <head>
+    <script src="https://staging.widgets.airrobe.com/versions/magentoChic/airrobe.min.js" src_type="url"/>
+  </head>
+  <body>
+    <referenceContainer name="product.info.form.content">
+      <block ifconfig="airrobe/general/enable" class="AirRobe\TheCircularWardrobe\Block\Product\View\Markup" name="product.info.markup" before="product.info.addtocart" template="AirRobe_TheCircularWardrobe::product/view/markup.phtml"></block>
+    </referenceContainer>
+  </body>
+</page>

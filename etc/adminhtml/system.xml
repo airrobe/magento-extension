@@ -1,0 +1,48 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+  <system>
+    <tab id="airrobe" translate="label" sortOrder="999">
+      <label>AirRobe</label>
+    </tab>
+
+    <section id="airrobe" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+      <label>Configuration</label>
+
+      <tab>airrobe</tab>
+
+      <resource>AirRobe_TheCircularWardrobe::config_airrobe_thecircularwardrobe</resource>
+
+      <group id="general" sortOrder="1" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+        <label>General</label>
+        <field id="enable" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Enable Module</label>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+      </group>
+
+      <group id="options" sortOrder="2" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+        <label>Credentials</label>
+
+        <field id="airrobe_api_url" type="text" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+          <label>AirRobe API URL</label>
+          <comment>The AirRobe API URL is (...)</comment>
+        </field>
+
+        <field id="airrobe_script_url" type="text" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+          <label>AirRobe script URL</label>
+          <comment>The AirRobe script URL is (...)</comment>
+        </field>
+
+        <field id="airrobe_app_id" type="text" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+          <label>AirRobe App ID</label>
+          <comment>The AirRobe App ID is used to (...)</comment>
+        </field>
+
+        <field id="airrobe_secret_token" type="text" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+          <label>AirRobe Secret Token</label>
+          <comment>The AirRobe Secret Token is used to (...)</comment>
+        </field>
+      </group>
+    </section>
+  </system>
+</config>
