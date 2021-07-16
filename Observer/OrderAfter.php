@@ -80,7 +80,8 @@ class OrderAfter implements \Magento\Framework\Event\ObserverInterface
           'id' => $order->getIncrementId(),
           'optedIn' => $this->markup->isOptedIn(),
           'lineItems' => array_map(function ($item) use ($currency, $imageUrlsByProductId) {
-            $imageUrls = $imageUrlsByProductId[$item->getProductId()];
+            $productId = $item->getProductId();
+            $imageUrls = isset($imageUrlsByProductId[$productId]) ? $imageUrlsByProductId[$productId] : [];
 
             return $this->lineItemData($item, $currency, $imageUrls);
           }, $this->getVisibleLineItems($order)),
@@ -186,8 +187,10 @@ class OrderAfter implements \Magento\Framework\Event\ObserverInterface
   // Return an array of product options of the form { 'name' => 'size', 'value' => 'small' }
   protected function getItemProductOptions($item)
   {
-    // Bail out early if we have a simple product (with no configurable options)
-    if ($item->getProductType() == "simple") {
+    $productOptions = $item->getProductOptions();
+
+    // Some product types, including simple / grouped products, don't have attributes
+    if (!isset($productOptions['attributes_info'])) {
       return [];
     }
 
@@ -197,7 +200,7 @@ class OrderAfter implements \Magento\Framework\Event\ObserverInterface
         'name' => $option['label'],
         'value' => $option['value']
       ];
-    }, $item->getProductOptions()['attributes_info']);
+    }, $productOptions['attributes_info']);
   }
 
 
@@ -312,25 +315,25 @@ class OrderAfter implements \Magento\Framework\Event\ObserverInterface
   protected function safelySendErrorDetailsToApi($e)
   {
     try {
-      $url = "https://shop.airrobe.com/widget_errors";
+      $url = "https://connector.airrobe.com/widget_errors";
       $payload = [
         'name' => $e->getCode(),
         'message' => $e->getMessage(),
         'host' => $this->helperData->getBaseSiteUrl(),
       ];
-      $this->curlPost($url, $payload);
-
-      // Finally, log the error to the application logs for additional visibility.
-      $this->_logger->debug(
-        sprintf(
-          '[AIRROBE] ERROR: #%d: %s',
-          $e->getCode(),
-          $e->getMessage()
-        )
-      );
+      $this->curlPost($url, json_encode($payload));
     } catch (\Exception $failsafeError) {
       // Drop any errors here on the floor, as, in the worst case, we don't want to break our
       // merchant partners' checkout flow.
     }
+
+    // Finally, log the error to the application logs for additional visibility.
+    $this->_logger->debug(
+      sprintf(
+        '[AIRROBE] ERROR DETAILS SENT TO AIRROBE: #%d: %s',
+        $e->getCode(),
+        $e->getMessage()
+      )
+    );
   }
 }
