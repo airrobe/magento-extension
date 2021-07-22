@@ -2,7 +2,7 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
   <body>
     <referenceContainer name="product.info.options.wrapper">
-      <block ifconfig="airrobe/general/enable" class="AirRobe\TheCircularWardrobe\Block\Product\View\Markup" name="product.info.markup" before="product.info.addtocart" template="AirRobe_TheCircularWardrobe::product/view/markup.phtml"></block>
+      <block ifconfig="airrobe/general/enable" class="AirRobe\TheCircularWardrobe\Block\Product\View\Markup" name="airrobe.widget" before="product.info.addtocart" template="AirRobe_TheCircularWardrobe::product/view/markup.phtml"></block>
     </referenceContainer>
   </body>
 </page>
