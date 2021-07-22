@@ -42,6 +42,11 @@
           <label>AirRobe Secret Token</label>
           <comment>The AirRobe Secret Token is used to securely sign payload of data that you send to us</comment>
         </field>
+
+        <field id="airrobe_brand_attribute_code" type="text" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+          <label>Brand attribute code</label>
+          <comment>The code that identifies the "brand" attribute in your system.</comment>
+        </field>
       </group>
     </section>
   </system>

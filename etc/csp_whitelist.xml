@@ -3,13 +3,28 @@
     <policies>
         <policy id="script-src">
             <values>
-                <value id="airrobe-staging" type="host">https://staging.widgets.airrobe.com</value>
-                <!-- <value id="airrobe-production" type="host">https://widgets.airrobe.com</value> -->
+                <value id="airrobe-script-src-widgets-staging" type="host">https://staging.widgets.airrobe.com</value>
+                <value id="airrobe-script-src-widgets" type="host">https://widgets.airrobe.com</value>
             </values>
         </policy>
+
         <policy id="connect-src">
             <values>
-                <value id="airrobe-staging-connect" type="host">https://staging.widgets.airrobe.com</value>
+                <value id="airrobe-connect-src-connector-staging" type="host">https://*.connector.airrobe.com</value>
+                <value id="airrobe-connect-src-connector" type="host">https://connector.airrobe.com</value>
+            </values>
+        </policy>
+
+        <policy id="font-src">
+            <values>
+                <value id="airrobe-fonts-src-fonts" type="host">https://fonts.airrobe.com</value>
+            </values>
+        </policy>
+
+        <policy id="img-src">
+            <values>
+                <value id="airrobe-img-src-widgets-staging" type="host"> https://staging.widgets.airrobe.com</value>
+                <value id="airrobe-img-src-widgets" type="host"> https://widgets.airrobe.com</value>
             </values>
         </policy>
     </policies>
