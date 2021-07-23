@@ -2,6 +2,7 @@
   "name": "airrobe/thecircularwardrobe",
   "description": "AirRobe - TheCircularWardrobe",
   "type": "magento2-module",
+  "version": "0.1.0",
   "license": "OSL-3.0",
   "authors": [
     {
@@ -9,7 +10,6 @@
       "name": "AirRobe"
     }
   ],
-  "minimum-stability": "stable",
   "require": {},
   "autoload": {
     "files": [
