@@ -117,8 +117,6 @@ class OrderAfter implements \Magento\Framework\Event\ObserverInterface
       'title' => $item->getName(),
       'brand' => $this->getProductBrand($product),
       'description' => $product->getDescription(),
-      // TODO: for now, we only send the first category of an item to our API. In future we may like
-      // to send multiple.
       'productType' => $this->helperData->getFirstProductCategory($product),
       'heroImageUrl' => $heroImageUrl,
       'additionalImageUrls' => $imageUrls,

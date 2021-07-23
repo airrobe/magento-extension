@@ -6,4 +6,5 @@
             </argument>
         </arguments>
     </type>
+    <preference for="Magento\Checkout\Block\Onepage\Success" type="AirRobe\TheCircularWardrobe\Block\Order\Success" />
 </config>

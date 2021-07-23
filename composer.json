@@ -1,5 +1,5 @@
 {
-  "name": "airrobe/module-thecircularwardrobe",
+  "name": "airrobe/thecircularwardrobe",
   "description": "AirRobe - TheCircularWardrobe",
   "type": "magento2-module",
   "license": "OSL-3.0",
@@ -18,5 +18,11 @@
     "psr-4": {
       "AirRobe\\TheCircularWardrobe\\": ""
     }
-  }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/airrobe/magento-extension"
+    }
+  ]
 }
