@@ -1,0 +1,28 @@
+{
+  "name": "airrobe/thecircularwardrobe",
+  "description": "AirRobe - TheCircularWardrobe",
+  "type": "magento2-module",
+  "license": "OSL-3.0",
+  "authors": [
+    {
+      "email": "developers@mage2gen.com",
+      "name": "AirRobe"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {},
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "AirRobe\\TheCircularWardrobe\\": ""
+    }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/airrobe/magento-extension"
+    }
+  ]
+}

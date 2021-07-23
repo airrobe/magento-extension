@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp:etc/csp_whitelist.xsd">
+    <policies>
+        <policy id="script-src">
+            <values>
+                <value id="airrobe-script-src-widgets-staging" type="host">https://staging.widgets.airrobe.com</value>
+                <value id="airrobe-script-src-widgets" type="host">https://widgets.airrobe.com</value>
+            </values>
+        </policy>
+
+        <policy id="connect-src">
+            <values>
+                <value id="airrobe-connect-src-connector-staging" type="host">https://*.connector.airrobe.com</value>
+                <value id="airrobe-connect-src-connector" type="host">https://connector.airrobe.com</value>
+            </values>
+        </policy>
+
+        <policy id="font-src">
+            <values>
+                <value id="airrobe-fonts-src-fonts" type="host">https://fonts.airrobe.com</value>
+            </values>
+        </policy>
+
+        <policy id="img-src">
+            <values>
+                <value id="airrobe-img-src-widgets-staging" type="host"> https://staging.widgets.airrobe.com</value>
+                <value id="airrobe-img-src-widgets" type="host"> https://widgets.airrobe.com</value>
+            </values>
+        </policy>
+    </policies>
+</csp_whitelist>
