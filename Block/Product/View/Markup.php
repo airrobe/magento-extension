@@ -9,67 +9,61 @@ use Magento\Catalog\Model\Product;
  */
 class Markup extends \Magento\Framework\View\Element\Template
 {
-    const COOKIE_NAME = 'airRobeOptedInState';
+  protected $helper;
 
-    protected $_cookieManager;
+  /**
+   * Core registry
+   *
+   * @var \Magento\Framework\Registry
+   */
+  protected $_registry = null;
 
-    protected $helper;
+  /**
+   * @param \Magento\Framework\View\Element\Template\Context $context
+   * @param \Magento\Framework\Registry                      $registry
+   * @param array                                            $data
+   */
+  public function __construct(
+    \Magento\Framework\View\Element\Template\Context $context,
+    \Magento\Framework\Registry $registry,
+    \AirRobe\TheCircularWardrobe\Helper\Data $helper,
+    \Magento\Store\Model\StoreManagerInterface $storeManager,
+    array $data = []
+  ) {
+    $this->_helper = $helper;
+    $this->_storeManager = $storeManager;
+    $this->_registry = $registry;
+    parent::__construct($context, $data);
+  }
 
-    /**
-     * Core registry
-     *
-     * @var \Magento\Framework\Registry
-     */
-    protected $_registry = null;
+  public function isExtensionEnabled()
+  {
+    return $this->_helper->isExtensionEnabled();
+  }
 
-    /**
-     * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Magento\Framework\Registry                      $registry
-     * @param array                                            $data
-     */
-    public function __construct(
-        \Magento\Framework\View\Element\Template\Context $context,
-        \Magento\Framework\Registry $registry,
-        \AirRobe\TheCircularWardrobe\Helper\Data $helper,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Framework\Stdlib\CookieManagerInterface $cookieManager,
-        array $data = []
-    ) {
-        $this->_helper = $helper;
-        $this->_cookieManager = $cookieManager;
-        $this->_storeManager = $storeManager;
-        $this->_registry = $registry;
-        parent::__construct($context, $data);
-    }
+  public function isOptedIn()
+  {
+    // The cookie is stored as a string, so we co-erce it to a boolean here.
+    return $this->_helpet->getIsOptedIn();
+  }
 
-    public function isExtensionEnabled()
-    {
-        return $this->_helper->isExtensionEnabled();
-    }
+  public function getAppId()
+  {
+    return $this->_helper->getAppID();
+  }
 
-    public function isOptedIn()
-    {
-        // The cookie is stored as a string, so we co-erce it to a boolean here.
-        return $this->_cookieManager->getCookie(self::COOKIE_NAME) == "true";
-    }
+  public function getFirstProductCategory()
+  {
+    return $this->_helper->getFirstProductCategory($this->getCurrentProduct());
+  }
 
-    public function getAppId()
-    {
-        return $this->_helper->getAppID();
-    }
+  public function getProductPriceCents()
+  {
+    return $this->getCurrentProduct()->getPrice();
+  }
 
-    public function getFirstProductCategory()
-    {
-        return $this->_helper->getFirstProductCategory($this->getCurrentProduct());
-    }
-
-    public function getProductPriceCents()
-    {
-        return $this->getCurrentProduct()->getPrice();
-    }
-
-    protected function getCurrentProduct()
-    {
-        return $this->_registry->registry('current_product');
-    }
+  protected function getCurrentProduct()
+  {
+    return $this->_registry->registry('current_product');
+  }
 }

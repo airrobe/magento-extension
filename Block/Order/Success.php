@@ -7,6 +7,8 @@ namespace AirRobe\TheCircularWardrobe\Block\Order;
  */
 class Success extends \Magento\Checkout\Block\Onepage\Success
 {
+  const COOKIE_NAME = 'airRobeOptedInState';
+
   // /**
   //  * @param \Magento\Framework\View\Element\Template\Context $context
   //  * @param \Magento\Checkout\Model\Session $checkoutSession
@@ -33,9 +35,18 @@ class Success extends \Magento\Checkout\Block\Onepage\Success
 
   public function getAppId()
   {
-    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-    $helper = $objectManager->create("\AirRobe\TheCircularWardrobe\Helper\Data");
 
-    return $helper->getAppID();
+    return $this->helper->getAppID();
+  }
+
+  public function getIsOrderOptedIn()
+  {
+    return $this->helper->getIsOrderOptedIn();
+  }
+
+  protected function helper()
+  {
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    return $objectManager->create("\AirRobe\TheCircularWardrobe\Helper\Data");
   }
 }
