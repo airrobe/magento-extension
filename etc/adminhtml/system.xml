@@ -23,29 +23,36 @@
       <group id="options" sortOrder="2" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
         <label>Credentials</label>
 
-        <field id="airrobe_api_url" type="text" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
-          <label>AirRobe Connector API URL</label>
-          <comment>The URL to send payloads of data to (refer to the documentation at https://connector.airrobe.com)</comment>
-        </field>
-
-        <field id="airrobe_script_url" type="text" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
-          <label>AirRobe script URL</label>
-          <comment>The URL of the script providing the circular wardrobe widget in your store</comment>
-        </field>
-
-        <field id="airrobe_app_id" type="text" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+        <field id="airrobe_app_id" type="text" sortOrder="1" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
           <label>AirRobe App ID</label>
           <comment>The AirRobe App ID that identifies your store</comment>
         </field>
 
-        <field id="airrobe_secret_token" type="text" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+        <field id="airrobe_secret_token" type="text" sortOrder="2" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
           <label>AirRobe Secret Token</label>
           <comment>The AirRobe Secret Token is used to securely sign payload of data that you send to us</comment>
         </field>
 
-        <field id="airrobe_brand_attribute_code" type="text" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+        <field id="airrobe_api_url" type="text" sortOrder="3" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+          <label>AirRobe Connector API URL</label>
+          <comment>The URL to send payloads of data to. This should usually be left unmodified from the default value (refer to connector.airrobe.com for current documentation)</comment>
+        </field>
+
+        <field id="airrobe_script_url" type="text" sortOrder="4" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+          <label>AirRobe script URL</label>
+          <comment>The URL of the script providing the circular wardrobe widget in your store. This should usually be left unmodified from the default value (refer to connector.airrobe.com for current documentation)</comment>
+        </field>
+      </group>
+
+      <group id="mapping" sortOrder="3" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+        <field id="airrobe_brand_attribute_code" type="text" sortOrder="1" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
           <label>Brand attribute code</label>
           <comment>The code that identifies the "brand" attribute in your system.</comment>
+        </field>
+
+        <field id="airrobe_material_attribute_code" type="text" sortOrder="2" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+          <label>Material attribute code</label>
+          <comment>The code that identifies the "material" attribute in your system (where material may refer to "leather", "satin" etc).</comment>
         </field>
       </group>
     </section>

@@ -19,7 +19,8 @@ class Data extends AbstractHelper
   const AIRROBE_API_URL = "airrobe/options/airrobe_api_url";
   const AIRROBE_APP_ID = "airrobe/options/airrobe_app_id";
   const AIRROBE_SECRET_TOKEN = "airrobe/options/airrobe_secret_token";
-  const BRAND_ATTRIBUTE_CODE = "airrobe/options/airrobe_brand_attribute_code";
+  const BRAND_ATTRIBUTE_CODE = "airrobe/mapping/airrobe_brand_attribute_code";
+  const MATERIAL_ATTRIBUTE_CODE = "airrobe/mapping/airrobe_material_attribute_code";
   const BASE_SITE_URL = "web/unsecure/base_url";
 
   public function __construct(
@@ -85,6 +86,11 @@ class Data extends AbstractHelper
     return $this->getConfigValue(self::BRAND_ATTRIBUTE_CODE);
   }
 
+  public function getMaterialAttributeCode()
+  {
+    return $this->getConfigValue(self::MATERIAL_ATTRIBUTE_CODE);
+  }
+
   public function getIsOptedIn()
   {
     // The cookie is stored as a string, so we co-erce it to a boolean here.
@@ -131,6 +137,28 @@ class Data extends AbstractHelper
       ->addAttributeToFilter('entity_id', $categoryIds);
 
     return $this->categoryTrees($categoryCollection);
+  }
+
+  public function getProductBrand($product)
+  {
+    $brandAttributeCode = $this->getBrandAttributeCode();
+
+    if (!brandAttributeCode) {
+      return
+    }
+
+    return $product->getAttributeText($brandAttributeCode) ?? null;
+  }
+
+  public function getProductMaterial($product)
+  {
+    $materialAttributeCode = $this->getMaterialAttributeCode();
+
+    if (!materialAttributeCode) {
+      return
+    }
+
+    return $product->getAttributeText($materialAttributeCode) ?? null;
   }
 
   // Return the category tree string for all active categories for the merchant

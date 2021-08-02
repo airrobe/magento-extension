@@ -115,7 +115,7 @@ class OrderAfter implements \Magento\Framework\Event\ObserverInterface
     return [
       'sku' => $item->getSku(),
       'title' => $item->getName(),
-      'brand' => $this->getProductBrand($product),
+      'brand' => $this->helperData->getProductBrand($product),
       'description' => $product->getDescription(),
       'productType' => $this->helperData->getFirstProductCategory($product),
       'heroImageUrl' => $heroImageUrl,
@@ -190,13 +190,6 @@ class OrderAfter implements \Magento\Framework\Event\ObserverInterface
     );
   }
 
-  protected function getProductBrand($product)
-  {
-    $brandAttributeCode = $this->helperData->getBrandAttributeCode();
-    $brand = $product->getAttributeText($brandAttributeCode);
-
-    return $brand ? $brand : null;
-  }
 
   // For a simple product that is a child of a parent configurable product, return the id of the
   // parent

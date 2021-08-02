@@ -1,1 +1,8 @@
-<div id="airrobe" data-page="product" data-app-id="<?php echo $block->getAppId(); ?>" data-category="<?php echo $block->getFirstProductCategory(); ?>" data-price="<?php echo $block->getProductPriceCents(); ?>"></div>
+<airrobe-opt-in 
+  app-id="<?php echo $block->getAppId(); ?>"
+  category="<?php echo $block->getFirstProductCategory(); ?>"
+  price="<?php echo $block->getProductPriceDollars(); ?>"
+  brand="<?php echo $block->getProductBrand(); ?>"
+  material="<?php echo $block->getProductMaterial(); ?>">
+</airrobe-opt-in>
+
