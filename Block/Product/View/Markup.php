@@ -59,11 +59,27 @@ class Markup extends \Magento\Framework\View\Element\Template
 
   public function getProductPriceCents()
   {
-    return $this->getCurrentProduct()->getPrice();
+    return $this->getSpecialPriceCents() || $this->getPriceCents();
+  }
+
+  // "rrp" == "price", "price" == "specialPrice || price"
+  public function getProductRRPCents()
+  {
+    return $this->getPriceCents();
   }
 
   protected function getCurrentProduct()
   {
     return $this->_registry->registry('current_product');
+  }
+
+  protected function getSpecialPriceCents()
+  {
+    $this->getCurrentProduct()->getPrice('special_price') * 100;
+  }
+
+  protected function getPriceCents()
+  {
+    $this->getCurrentProduct()->getPrice() * 100;
   }
 }
