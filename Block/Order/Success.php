@@ -19,6 +19,11 @@ class Success extends \Magento\Checkout\Block\Onepage\Success
     return $this->helper()->getIsOrderOptedIn();
   }
 
+  public function getEmail()
+  {
+    return $this->_checkoutSession->getLastRealOrder()->getCustomerEmail();
+  }
+
   protected function helper()
   {
     $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
