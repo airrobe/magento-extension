@@ -1,7 +1,5 @@
 <airrobe-opt-in
-  style="margin-bottom: 20px"
-  top-margin="<?php echo $block->getOptInTopMargin(); ?>"
-  bottom-margin="<?php echo $block->getOptInBottomMargin(); ?>"
+  style="margin-bottom: <?php echo $block->getOptInBottomMargin() ?? 0; ?>; margin-top: <?php echo $block->getOptInTopMargin() ?? 0; ?>"
   app-id="<?php echo $block->getAppId(); ?>"
   category="<?php echo $block->getFirstProductCategory(); ?>"
   price-cents="<?php echo $block->getProductPriceCents(); ?>"
