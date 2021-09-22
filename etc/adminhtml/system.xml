@@ -37,11 +37,6 @@
           <label>AirRobe Connector API URL</label>
           <comment>The URL to send payloads of data to. This should usually be left unmodified from the default value (refer to connector.airrobe.com for current documentation)</comment>
         </field>
-
-        <field id="airrobe_script_url" type="text" sortOrder="4" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
-          <label>AirRobe script URL</label>
-          <comment>The URL of the script providing the circular wardrobe widget in your store. This should usually be left unmodified from the default value (refer to connector.airrobe.com for current documentation)</comment>
-        </field>
       </group>
 
       <group id="mapping" sortOrder="3" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">

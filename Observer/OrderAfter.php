@@ -122,11 +122,11 @@ class OrderAfter implements \Magento\Framework\Event\ObserverInterface
       'additionalImageUrls' => $imageUrls,
       'productAttributes' => $this->getItemProductOptions($item),
       'paidPrice' => [
-        'cents' => $item->getPrice(),
+        'cents' => $item->getPrice() * 100,
         'currency' => $currency,
       ],
       'rrp' => [
-        'cents' => $item->getOriginalPrice(),
+        'cents' => $item->getOriginalPrice() * 100,
         'currency' => $currency,
       ],
     ];

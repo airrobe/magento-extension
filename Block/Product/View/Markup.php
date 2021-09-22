@@ -44,7 +44,7 @@ class Markup extends \Magento\Framework\View\Element\Template
   public function isOptedIn()
   {
     // The cookie is stored as a string, so we co-erce it to a boolean here.
-    return $this->_helpet->getIsOptedIn();
+    return $this->_helper->getIsOptedIn();
   }
 
   public function getAppId()
