@@ -1,9 +1,9 @@
 <airrobe-opt-in
-  style="margin-bottom: 20px"
+  style="margin-bottom: <?php echo $block->getOptInBottomMargin() ?? 0; ?>; margin-top: <?php echo $block->getOptInTopMargin() ?? 0; ?>"
   app-id="<?php echo $block->getAppId(); ?>"
   category="<?php echo $block->getFirstProductCategory(); ?>"
-  priceCents="<?php echo $block->getProductPriceCents(); ?>"
-  rrpCents="<?php echo $block->getProductRRPCents(); ?>"
+  price-cents="<?php echo $block->getProductPriceCents(); ?>"
+  original-full-price-cents="<?php echo $block->getProductOriginalFullPriceCents(); ?>"
   brand="<?php echo $block->getProductBrand(); ?>"
   material="<?php echo $block->getProductMaterial(); ?>">
 </airrobe-opt-in>

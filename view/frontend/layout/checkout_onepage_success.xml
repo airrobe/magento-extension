@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <body>
-  <head>
-    <script src="https://staging.widgets.airrobe.com/versions/magento/v1/airrobe.min.js" src_type="url"/>
-  </head>
+  <referenceBlock name="head.additional">
+    <block ifconfig="airrobe/general/enable" class="AirRobe\TheCircularWardrobe\Block\Layout\Script" name="airrobe.script" template="AirRobe_TheCircularWardrobe::layout/script.phtml"></block>
+  </referenceBlock>
   <referenceContainer name="order.success.additional.info">
     <block ifconfig="airrobe/general/enable" class="AirRobe\TheCircularWardrobe\Block\Order\Success" name="airrobe.order" template="AirRobe_TheCircularWardrobe::order/success.phtml" before="-"/>
   </referenceContainer>

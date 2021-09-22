@@ -19,6 +19,9 @@ class Data extends AbstractHelper
   const AIRROBE_API_URL = "airrobe/options/airrobe_api_url";
   const AIRROBE_APP_ID = "airrobe/options/airrobe_app_id";
   const AIRROBE_SECRET_TOKEN = "airrobe/options/airrobe_secret_token";
+  const AIRROBE_OPT_IN_TOP_MARGIN = "airrobe/styling/opt_in_top_margin";
+  const AIRROBE_OPT_IN_BOTTOM_MARGIN = "airrobe/styling/opt_in_bottom_margin";
+
   const BRAND_ATTRIBUTE_CODE = "airrobe/mapping/airrobe_brand_attribute_code";
   const MATERIAL_ATTRIBUTE_CODE = "airrobe/mapping/airrobe_material_attribute_code";
   const BASE_SITE_URL = "web/unsecure/base_url";
@@ -89,6 +92,14 @@ class Data extends AbstractHelper
   public function getMaterialAttributeCode()
   {
     return $this->getConfigValue(self::MATERIAL_ATTRIBUTE_CODE);
+  }
+
+  public function getOptInTopMargin() {
+    return $this->getConfigValue(self::AIRROBE_OPT_IN_TOP_MARGIN);
+  }
+
+  public function getOptInBottomMargin() {
+    return $this->getConfigValue(self::AIRROBE_OPT_IN_BOTTOM_MARGIN);
   }
 
   public function getIsOptedIn()
