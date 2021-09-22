@@ -144,7 +144,7 @@ class Data extends AbstractHelper
     $brandAttributeCode = $this->getBrandAttributeCode();
 
     if (!brandAttributeCode) {
-      return
+      return;
     }
 
     return $product->getAttributeText($brandAttributeCode) ?? null;
@@ -155,7 +155,7 @@ class Data extends AbstractHelper
     $materialAttributeCode = $this->getMaterialAttributeCode();
 
     if (!materialAttributeCode) {
-      return
+      return;
     }
 
     return $product->getAttributeText($materialAttributeCode) ?? null;
