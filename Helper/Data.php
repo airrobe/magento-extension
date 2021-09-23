@@ -16,7 +16,7 @@ class Data extends AbstractHelper
 
   const COOKIE_NAME = 'airRobeOptedInState';
   const MODULE_ENABLE = "airrobe/general/enable";
-  const AIRROBE_API_URL = "airrobe/options/airrobe_api_url";
+  const LIVEMODE_ENABLE = "airrobe/general/live_mode";
   const AIRROBE_APP_ID = "airrobe/options/airrobe_app_id";
   const AIRROBE_SECRET_TOKEN = "airrobe/options/airrobe_secret_token";
   const AIRROBE_OPT_IN_TOP_MARGIN = "airrobe/styling/opt_in_top_margin";
@@ -60,7 +60,7 @@ class Data extends AbstractHelper
 
   public function isExtensionEnabled()
   {
-    return $this->getConfigValue(self::MODULE_ENABLE);
+    return filter_var($this->getConfigValue(self::MODULE_ENABLE), FILTER_VALIDATE_BOOLEAN);
   }
 
   public function getSignature($string_payload)
@@ -76,7 +76,28 @@ class Data extends AbstractHelper
 
   public function getApiUrl()
   {
-    return $this->getConfigValue(self::AIRROBE_API_URL);
+    $livemode_enabled = filter_var($this->getConfigValue(self::LIVEMODE_ENABLE), FILTER_VALIDATE_BOOLEAN);
+
+    if($livemode_enabled) {
+      return "https://connector.airrobe.com/graphql";
+    } else {
+      return "https://sandbox.connector.airrobe.com/graphql";
+    }
+  }
+
+  public function getScriptUrl()
+  {
+    $this->_logger->debug("LIVEMODE_ENABLE: " . $this->getConfigValue(self::LIVEMODE_ENABLE));
+    $this->_logger->debug("TYPE OF ENABLED: " . gettype($this->getConfigValue(self::LIVEMODE_ENABLE)));
+
+    $livemode_enabled = filter_var($this->getConfigValue(self::LIVEMODE_ENABLE), FILTER_VALIDATE_BOOLEAN);
+    $ext_enabled = filter_var($this->getConfigValue(self::MODULE_ENABLE), FILTER_VALIDATE_BOOLEAN);
+
+    $this->_logger->debug("EXT ENABLED: " . $ext_enabled);
+
+    $host = $livemode_enabled ? "https://widgets.airrobe.com" : "https://staging.widgets.airrobe.com";
+
+    return $host . "/versions/magento/v1/" . $this->getAppID() . "/airrobe.min.js";
   }
 
   public function getBaseSiteUrl()
