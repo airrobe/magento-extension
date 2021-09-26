@@ -20,11 +20,6 @@ class Script extends \Magento\Framework\View\Element\Template
 
   public function getScriptUrl()
   {
-    // TODO: do we want a sandbox mode, that switches between:
-    //
-    // widgets.airrobe.com and
-    // staging.widgets.airrobe.com?
-    $appID = $this->_helper->getAppID();
-    return "https://widgets.airrobe.com/v1/magento/" . $appID . "/airrobe.js";
+    return $this->_helper->getScriptUrl();
   }
 }

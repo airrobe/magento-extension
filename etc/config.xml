@@ -6,6 +6,9 @@
         <airrobe_api_url>https://connector.airrobe.com/graphql</airrobe_api_url>
         <airrobe_brand_attribute_code>manufacturer</airrobe_brand_attribute_code>
       </options>
+      <general>
+        <live_mode>false</live_mode>
+      </general>
     </airrobe>
   </default>
 </config>

@@ -18,6 +18,12 @@
           <label>Enable Module</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
         </field>
+
+        <field id="live_mode" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Live mode</label>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+          <comment>When checked, orders will be sent to airrobe.com. When unchecked, orders will be sent to sandbox.marketplace.airrobe.com</comment>
+        </field>
       </group>
 
       <group id="options" sortOrder="2" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
@@ -31,11 +37,6 @@
         <field id="airrobe_secret_token" type="text" sortOrder="2" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
           <label>AirRobe Secret Token</label>
           <comment>The AirRobe Secret Token is used to securely sign payload of data that you send to us</comment>
-        </field>
-
-        <field id="airrobe_api_url" type="text" sortOrder="3" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
-          <label>AirRobe Connector API URL</label>
-          <comment>The URL to send payloads of data to. This should usually be left unmodified from the default value (refer to connector.airrobe.com for current documentation)</comment>
         </field>
       </group>
 
