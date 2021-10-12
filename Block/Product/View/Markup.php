@@ -67,14 +67,6 @@ class Markup extends \Magento\Framework\View\Element\Template
     return $this->getCurrentProduct()->getPriceInfo()->getPrice('regular_price')->getMinRegularAmount()->getValue() * 100;
   }
 
-  public function getOptInTopMargin() {
-    return $this->_helper->getOptInTopMargin();
-  }
-
-  public function getOptInBottomMargin() {
-    return $this->_helper->getOptInBottomMargin();
-  }
-
   protected function getCurrentProduct()
   {
     return $this->_registry->registry('current_product');

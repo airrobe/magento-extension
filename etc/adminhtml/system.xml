@@ -53,20 +53,6 @@
           <comment>The code that identifies the "material" attribute in your system (where material may refer to "leather", "satin" etc).</comment>
         </field>
       </group>
-
-      <group id="styling" sortOrder="2" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
-        <label>Styling</label>
-
-        <field id="opt_in_top_margin" type="text" sortOrder="1" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
-          <label>Top margin</label>
-          <comment>The amount of whitespace in pixels to add above the airrobe opt-in component</comment>
-        </field>
-
-        <field id="opt_in_bottom_margin" type="text" sortOrder="1" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
-          <label>Bottom margin</label>
-          <comment>The amount of whitespace in pixels to add below the airrobe opt-in component</comment>
-        </field>
-      </group>
     </section>
   </system>
 </config>
