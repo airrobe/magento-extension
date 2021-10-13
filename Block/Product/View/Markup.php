@@ -64,7 +64,16 @@ class Markup extends \Magento\Framework\View\Element\Template
 
   public function getProductOriginalFullPriceCents()
   {
-    return $this->getCurrentProduct()->getPriceInfo()->getPrice('regular_price')->getMinRegularAmount()->getValue() * 100;
+    $regularPrice = $this->getCurrentProduct()->getPriceInfo()->getPrice('regular_price');
+
+    if ($regularPrice && $this->isProductConfigurable()) {
+      return $regularPrice->getMinRegularAmount()->getValue() * 100;
+    }
+  }
+
+  protected function isProductConfigurable()
+  {
+    return $this->getCurrentProduct()->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE;
   }
 
   protected function getCurrentProduct()
