@@ -2,23 +2,33 @@
 
 namespace AirRobe\TheCircularWardrobe\Console\Command;
 
+use AirRobe\TheCircularWardrobe\Helper\Data;
+use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use AirRobe\TheCircularWardrobe\Helper;
 
 /**
- * Class SomeCommand
+ * Class SyncTaxonomy
+ * @package AirRobe\TheCircularWardrobe\Console\Command
+ * @noinspection PhpUnused
  */
 class SyncTaxonomy extends Command
 {
     const NAME = 'name';
 
-    /**
-     * @inheritDoc
-     */
-    protected function configure()
+    protected Data $helperData;
+
+    public function __construct(
+      Data $helper,
+      string $name = null
+    ) {
+      $this->helperData = $helper;
+      parent::__construct($name);
+    }
+
+    protected function configure(): void
     {
         $this->setName('airrobe:taxonomy:sync');
         $this->setDescription('This is my first console command.');
@@ -38,30 +48,27 @@ class SyncTaxonomy extends Command
      * @param InputInterface  $input
      * @param OutputInterface $output
      *
-     * @return null|int
+     * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $helper = $objectManager->create('AirRobe\TheCircularWardrobe\Helper\Data');
-
         try {
-            $response = $helper->sendToAirRobeAPI(
+            $response = $this->helperData->sendToAirRobeAPI(
                 [
                     'query' => "mutation MagentoPrepareMappings(\$input: PrepareMappingsMutationInput!){
                         prepareMappings(input: \$input) { error  }
                     }",
                     'variables' => [
                         'input' => [
-                            'productTypes' => $helper->getAllCategoryTrees(),
-                            'customFields' => $helper->getAllAttributes()
+                            'productTypes' => $this->helperData->getAllCategoryTrees(),
+                            'customFields' => $this->helperData->getAllAttributes()
                         ]
                     ]
                 ]
             );
 
             $output->writeln('<comment>Result of taxonomy sync: ' . $response . '</comment>');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $output->writeln(
                 '<error> ' . sprintf(
                     'Data sync task failed with error #%d: %s',

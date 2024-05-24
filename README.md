@@ -1,12 +1,12 @@
-# Mage2 Module AirRobe TheCircularWardrobe
+# Magento2 Module AirRobe TheCircularWardrobe
 
-    ``airrobe/module-thecircularwardrobe``
+    ``airrobe/thecircularwardrobe``
 
- - [Main Functionalities](#markdown-header-main-functionalities)
- - [Installation](#markdown-header-installation)
- - [Configuration](#markdown-header-configuration)
- - [Specifications](#markdown-header-specifications)
- - [Attributes](#markdown-header-attributes)
+ - [Main Functionalities](#main-functionalities)
+ - [Installation](#installation)
+ - [Configuration](#configuration)
+ - [Specifications](#specifications)
+ - [Attributes](#attributes)
 
 
 ## Main Functionalities
@@ -27,9 +27,9 @@ AirRobe - TheCircularWardrobe
  - Make the module available in a composer repository for example:
     - private repository `repo.magento.com`
     - public repository `packagist.org`
-    - public github repository as vcs
+    - public gitHub repository as vcs
  - Add the composer repository to the configuration by running `composer config repositories.repo.magento.com composer https://repo.magento.com/`
- - Install the module composer by running `composer require airrobe/module-thecircularwardrobe`
+ - Install the module composer by running `composer require airrobe/thecircularwardrobe`
  - enable the module by running `php bin/magento module:enable AirRobe_TheCircularWardrobe`
  - apply database updates by running `php bin/magento setup:upgrade`\*
  - Flush the cache by running `php bin/magento cache:flush`

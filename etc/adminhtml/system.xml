@@ -1,4 +1,5 @@
 <?xml version="1.0" ?>
+<!--suppress XmlHighlighting, XmlHighlighting -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
   <system>
     <tab id="airrobe" translate="label" sortOrder="999">
@@ -22,7 +23,7 @@
         <field id="live_mode" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Live mode</label>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-          <comment>When checked, orders will be sent to airrobe.com. When unchecked, orders will be sent to sandbox.marketplace.airrobe.com</comment>
+          <comment>When set to "Yes", orders will be sent to airrobe.com. When set to "No", orders will be sent to AirRobe's sandbox environment.</comment>
         </field>
       </group>
 
@@ -50,7 +51,7 @@
 
         <field id="airrobe_material_attribute_code" type="text" sortOrder="2" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
           <label>Material attribute code</label>
-          <comment>The code that identifies the "material" attribute in your system (where material may refer to "leather", "satin" etc).</comment>
+          <comment>The code that identifies the "material" attribute in your system (where material may refer to "leather", "satin" etc.).</comment>
         </field>
       </group>
     </section>
