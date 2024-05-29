@@ -31,7 +31,7 @@ Once you have an account, login in to our [Connector Dashboard](https://connecto
  - Flush the cache by running `php bin/magento cache:flush`
 
 ### Type 2: Composer
- - Install the module composer by running `composer require airrobe/thecircularwardrobe`
+ - Install the module composer by running `composer require airrobe/thecircularwardrobe "^1.0"`
  - enable the module by running `bin/magento module:enable AirRobe_TheCircularWardrobe`
  - apply database updates by running `bin/magento setup:upgrade --keep-generated`
  - Flush the cache by running `bin/magento cache:flush`
