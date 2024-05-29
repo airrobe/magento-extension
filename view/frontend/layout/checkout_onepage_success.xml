@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
 <body>
   <referenceBlock name="head.additional">
     <block ifconfig="airrobe/general/enable" class="AirRobe\TheCircularWardrobe\Block\Layout\Script" name="airrobe.script" template="AirRobe_TheCircularWardrobe::layout/script.phtml"></block>

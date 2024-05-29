@@ -2,17 +2,39 @@
 
 namespace AirRobe\TheCircularWardrobe\Helper;
 
+use Exception;
+use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory;
+use Magento\Catalog\Model\ResourceModel\Category\Tree;
+use Magento\Eav\Model\Entity\Attribute;
+use Magento\Eav\Model\Entity\Attribute\Set;
+use Magento\Eav\Model\ResourceModel\Entity\Attribute\Collection;
 use Magento\Framework\App\Helper\AbstractHelper;
+use Magento\Framework\App\Helper\Context;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Stdlib\CookieManagerInterface;
 use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\StoreManagerInterface;
+use Psr\Log\LoggerInterface;
 
+/**
+ * Class Data
+ * @package AirRobe\TheCircularWardrobe\Helper
+ * @noinspection UsingHelperClassInspection
+ * @noinspection PhpUnused
+ *
+ * Using Helper classes are an anti-pattern in Magento 2. It is recommended to use service classes instead.
+ * This should be refactored into separate service classes grouped into specific functionality.
+ */
 class Data extends AbstractHelper
 {
-  protected $_cookieManager;
+  protected CookieManagerInterface $_cookieManager;
   protected $_logger;
-  protected $_storeManager;
-  protected $_tree;
-  protected $_attributeCollection;
-  protected $_categoryCollectionFactory;
+  protected StoreManagerInterface $_storeManager;
+  protected Tree $_tree;
+  protected Collection $_attributeCollection;
+  protected CollectionFactory $_categoryCollectionFactory;
 
   const COOKIE_NAME = 'airRobeOptedInState';
   const MODULE_ENABLE = "airrobe/general/enable";
@@ -25,13 +47,13 @@ class Data extends AbstractHelper
   const BASE_SITE_URL = "web/unsecure/base_url";
 
   public function __construct(
-    \Magento\Framework\App\Helper\Context $context,
-    \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryCollectionFactory,
-    \Magento\Store\Model\StoreManagerInterface $storeManager,
-    \Magento\Catalog\Model\ResourceModel\Category\Tree $tree,
-    \Magento\Eav\Model\ResourceModel\Entity\Attribute\Collection $attributeCollection,
-    \Magento\Framework\Stdlib\CookieManagerInterface $cookieManager,
-    \Psr\Log\LoggerInterface $logger
+    Context $context,
+    CollectionFactory $categoryCollectionFactory,
+    StoreManagerInterface $storeManager,
+    Tree $tree,
+    Collection $attributeCollection,
+    CookieManagerInterface $cookieManager,
+    LoggerInterface $logger
   ) {
     $this->_logger = $logger;
     $this->_categoryCollectionFactory = $categoryCollectionFactory;
@@ -61,7 +83,7 @@ class Data extends AbstractHelper
     return filter_var($this->getConfigValue(self::MODULE_ENABLE), FILTER_VALIDATE_BOOLEAN);
   }
 
-  public function getSignature($string_payload)
+  public function getSignature($string_payload): string
   {
     $secretToken = $this->getConfigValue(self::AIRROBE_SECRET_TOKEN);
     return base64_encode(hash_hmac('sha256', $string_payload, $secretToken, true));
@@ -72,7 +94,7 @@ class Data extends AbstractHelper
     return $this->getConfigValue(self::AIRROBE_APP_ID);
   }
 
-  public function getApiUrl()
+  public function getApiUrl(): string
   {
     $livemode_enabled = filter_var($this->getConfigValue(self::LIVEMODE_ENABLE), FILTER_VALIDATE_BOOLEAN);
 
@@ -83,7 +105,7 @@ class Data extends AbstractHelper
     }
   }
 
-  public function getScriptUrl()
+  public function getScriptUrl(): string
   {
     $this->_logger->debug("LIVEMODE_ENABLE: " . $this->getConfigValue(self::LIVEMODE_ENABLE));
     $this->_logger->debug("TYPE OF ENABLED: " . gettype($this->getConfigValue(self::LIVEMODE_ENABLE)));
@@ -95,7 +117,7 @@ class Data extends AbstractHelper
 
     $host = $livemode_enabled ? "https://widgets.airrobe.com" : "https://staging.widgets.airrobe.com";
 
-    return $host . "/versions/magento/v1/" . $this->getAppID() . "/airrobe.min.js";
+    return $host . "/versions/magento/v2/" . $this->getAppID() . "/airrobe.min.js";
   }
 
   public function getBaseSiteUrl()
@@ -113,22 +135,29 @@ class Data extends AbstractHelper
     return $this->getConfigValue(self::MATERIAL_ATTRIBUTE_CODE);
   }
 
-  public function getIsOptedIn()
+  public function getIsOptedIn(): bool
   {
-    // The cookie is stored as a string, so we co-erce it to a boolean here.
+    // The cookie is stored as a string, so we coerce it to a boolean here.
     return $this->_cookieManager->getCookie(self::COOKIE_NAME) == "true";
   }
 
-  public function getFirstProductCategory($product)
+  public function getFirstProductCategory(ProductInterface $product)
   {
     $categories = $this->getProductCategories($product);
-    return isset($categories[0]) ? $categories[0] : "default";
+    return $categories[0] ?? "default";
   }
 
-  // Get a string representation of the full path of a category, e.g. womens/shoes/heels
-  public function getCategoryTree($category)
+  public function getCategoryTree($category): string
   {
-    $storeId = $this->_storeManager->getStore()->getId() ?? 1;
+    try {
+      $storeId = $this->_storeManager->getStore()->getId();
+    } catch (NoSuchEntityException) {
+      $storeId = null;
+    }
+
+    if (!isset($storeId)) {
+      $storeId = $this->_storeManager->getDefaultStoreView()->getId();
+    }
 
     $path = $category->getPath();
     $categoryTree = $this->_tree->setStoreId($storeId)->loadBreadcrumbsArray($path);
@@ -144,7 +173,7 @@ class Data extends AbstractHelper
 
   // Get a string representation of all categories for a given product, of the form
   // ["womens/bags/handbags", "special-events/all-events"]
-  public function getProductCategories($product)
+  public function getProductCategories(ProductInterface $product): array
   {
     $categoryIds = $product->getCategoryIds();
 
@@ -152,39 +181,53 @@ class Data extends AbstractHelper
       return [];
     }
 
-    $categoryCollection = $this->_categoryCollectionFactory
-      ->create()
-      ->addAttributeToSelect('*')
-      ->addIsActiveFilter()
-      ->addAttributeToFilter('entity_id', $categoryIds);
+    try {
+      $categoryCollection = $this->_categoryCollectionFactory
+        ->create()
+        ->addAttributeToSelect('*')
+        ->addIsActiveFilter()
+        ->addAttributeToFilter('entity_id', $categoryIds);
 
-    return $this->categoryTrees($categoryCollection);
+      return $this->categoryTrees($categoryCollection);
+    } catch (LocalizedException $e) {
+      $this->safelySendErrorDetailsToApi($e);
+      return [];
+    }
   }
 
-  public function getProductBrand($product)
+  public function getProductBrand(ProductInterface $product)
   {
     $brandAttributeCode = $this->getBrandAttributeCode();
 
     if (!$brandAttributeCode) {
-      return;
+      return null;
     }
 
     return $product->getAttributeText($brandAttributeCode) ?? null;
   }
 
-  public function getProductMaterial($product)
+  public function getProductMaterial(ProductInterface $product)
   {
     $materialAttributeCode = $this->getMaterialAttributeCode();
 
     if (!$materialAttributeCode) {
-      return;
+      return null;
     }
 
     return $product->getAttributeText($materialAttributeCode) ?? null;
   }
 
+  public function getProductDescription(ProductInterface $product)
+  {
+    return $product->getData('description');
+  }
+
   // Return the category tree string for all active categories for the merchant
-  public function getAllCategoryTrees()
+
+  /**
+   * @throws LocalizedException
+   */
+  public function getAllCategoryTrees(): array
   {
     $categoryCollection = $this->_categoryCollectionFactory
       ->create()
@@ -194,7 +237,7 @@ class Data extends AbstractHelper
     return $this->categoryTrees($categoryCollection);
   }
 
-  public function categoryTrees($categoryCollection)
+  public function categoryTrees($categoryCollection): array
   {
     $categories = [];
 
@@ -205,37 +248,36 @@ class Data extends AbstractHelper
     return $categories;
   }
 
-  // Get the names and possible values for all product attributes in the system. These are sent to
-  // AirRobe to prepare mapping records in the connector.
-  public function getAllAttributes()
+  /**
+   * Get the names and possible values for all product attributes in the system. These are sent to
+   * AirRobe to prepare mapping records in the connector.
+   * @return array
+   * @throws LocalizedException
+   */
+  public function getAllAttributes(): array
   {
     // Filter to product attributes (entity type 4)
     $this->_attributeCollection
-      ->addFieldToFilter(\Magento\Eav\Model\Entity\Attribute\Set::KEY_ENTITY_TYPE_ID, 4)
+      ->addFieldToFilter(Set::KEY_ENTITY_TYPE_ID, 4)
       ->addFieldToFilter("is_user_defined", 1);
 
-    // I'm a javascript developer, sorry
-    return array_values(
-      array_map(
-        function ($attribute) {
-          return [
-            'name' => $attribute->getAttributeCode(),
-            'values' => array_values(
-              // We filter out blank string values from the list of options
-              array_filter(
-                array_map(
-                  function ($option) {
-                    return $option["label"] != " " ? $option["label"] : null;
-                  },
-                  $attribute->getSource()->getAllOptions()
-                )
-              )
-            )
-          ];
-        },
-        $this->_attributeCollection->load()->getItems()
-      )
-    );
+    $data = [];
+    foreach ($this->_attributeCollection->load()->getItems() as $attribute) {
+      /* @var $attribute Attribute */
+
+      $values = [];
+      foreach ($attribute->getSource()->getAllOptions() as $option) {
+        if (trim($option["label"]) != "") {
+          $values[] = $option["label"];
+        }
+      }
+
+      $data[] = [
+        'name' => $attribute->getAttributeCode(),
+        'values' => $values
+      ];
+    }
+    return $data;
   }
 
   // Send a payload of data to the airrobe connector. Before sending we sign with an APP_ID taken
@@ -244,7 +286,7 @@ class Data extends AbstractHelper
   // that ship with magento, and it may make sense to start using these. But for now, this CURL
   // approach is workable (and also avoids any potential compatability issues with our merchant
   // partner stores)
-  public function sendToAirRobeAPI($payload)
+  public function sendToAirRobeAPI($payload): bool|string|null
   {
     $url = $this->getApiUrl();
     $appId = $this->getAppID();
@@ -274,8 +316,8 @@ class Data extends AbstractHelper
     try {
       $curl = curl_init();
 
-      if ($curl == false) {
-        throw new \Exception('Failed to initialize CURL');
+      if (!$curl) {
+        throw new Exception('Failed to initialize CURL');
       }
 
       curl_setopt_array(
@@ -292,13 +334,13 @@ class Data extends AbstractHelper
       $response = curl_exec($curl);
 
       if ($response === false) {
-        throw new \Exception(curl_error($curl), curl_errno($curl));
+        throw new Exception(curl_error($curl), curl_errno($curl));
       }
 
       curl_close($curl);
 
       return $response;
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
       trigger_error(
         sprintf(
           'Curl failed with error #%d: %s',
@@ -312,7 +354,7 @@ class Data extends AbstractHelper
 
   // If something goes wrong, WE want to know about it. This will trigger notifications in our
   // systems.
-  public function safelySendErrorDetailsToApi($e)
+  public function safelySendErrorDetailsToApi($e): void
   {
     try {
       $url = "https://connector.airrobe.com/widget_errors";
@@ -322,7 +364,7 @@ class Data extends AbstractHelper
         'host' => $this->getBaseSiteUrl(),
       ];
       $this->curlPost($url, json_encode($payload));
-    } catch (\Exception $failsafeError) {
+    } catch (Exception) {
       // Drop any errors here on the floor, as, in the worst case, we don't want to break our
       // merchant partners' checkout flow.
     }

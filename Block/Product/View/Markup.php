@@ -2,82 +2,117 @@
 
 namespace AirRobe\TheCircularWardrobe\Block\Product\View;
 
-use Magento\Catalog\Model\Product;
+use AirRobe\TheCircularWardrobe\Helper\Data;
+use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\Element\Template\Context;
 
 /**
- * [Description Markup]
+ * Class Markup
+ * @package AirRobe\TheCircularWardrobe\Block\Product\View
+ * @noinspection PhpUnused
  */
-class Markup extends \Magento\Framework\View\Element\Template
+class Markup extends Template
 {
-  protected $helper;
+  protected Data $helper;
+  protected ?ProductRepositoryInterface $productRepository = null;
 
-  /**
-   * Core registry
-   *
-   * @var \Magento\Framework\Registry
-   */
-  protected $_registry = null;
-
-  /**
-   * @param \Magento\Framework\View\Element\Template\Context $context
-   * @param \Magento\Framework\Registry                      $registry
-   * @param array                                            $data
-   */
   public function __construct(
-    \Magento\Framework\View\Element\Template\Context $context,
-    \Magento\Framework\Registry $registry,
-    \AirRobe\TheCircularWardrobe\Helper\Data $helper,
-    \Magento\Store\Model\StoreManagerInterface $storeManager,
+    Context $context,
+    ProductRepositoryInterface $productRepository,
+    Data $helper,
     array $data = []
   ) {
-    $this->_helper = $helper;
-    $this->_storeManager = $storeManager;
-    $this->_registry = $registry;
+    $this->productRepository = $productRepository;
+    $this->helper = $helper;
     parent::__construct($context, $data);
   }
 
   public function isExtensionEnabled()
   {
-    return $this->_helper->isExtensionEnabled();
+    return $this->helper->isExtensionEnabled();
   }
 
-  public function isOptedIn()
+  public function isOptedIn(): bool
   {
-    // The cookie is stored as a string, so we co-erce it to a boolean here.
-    return $this->_helper->getIsOptedIn();
+    // The cookie is stored as a string, so we coerce it to a boolean here.
+    return $this->helper->getIsOptedIn();
   }
 
   public function getAppId()
   {
-    return $this->_helper->getAppID();
+    return $this->helper->getAppID();
   }
 
   public function getFirstProductCategory()
   {
-    return $this->_helper->getFirstProductCategory($this->getCurrentProduct());
-  }
-
-  public function getProductPriceCents()
-  {
-    return $this->getCurrentProduct()->getFinalPrice() * 100;
-  }
-
-  public function getProductOriginalFullPriceCents()
-  {
-    $regularPrice = $this->getCurrentProduct()->getPriceInfo()->getPrice('regular_price');
-
-    if ($regularPrice && $this->isProductConfigurable()) {
-      return $regularPrice->getMinRegularAmount()->getValue() * 100;
+    try {
+      return $this->helper->getFirstProductCategory($this->getCurrentProduct());
+    } catch (NoSuchEntityException) {
+      return null;
     }
   }
 
-  protected function isProductConfigurable()
+  public function getProductBrand()
   {
-    return $this->getCurrentProduct()->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE;
+    try {
+      return $this->helper->getProductBrand($this->getCurrentProduct());
+    } catch (NoSuchEntityException) {
+      return null;
+    }
   }
 
-  protected function getCurrentProduct()
+  public function getProductMaterial()
   {
-    return $this->_registry->registry('current_product');
+    try {
+      return $this->helper->getProductMaterial($this->getCurrentProduct());
+    } catch (NoSuchEntityException) {
+      return null;
+    }
+  }
+
+  public function getProductPriceCents(): float|int
+  {
+    try {
+      return $this->getCurrentProduct()->getFinalPrice() * 100;
+    } catch (NoSuchEntityException) {
+      return 0;
+    }
+  }
+
+  public function getProductOriginalFullPriceCents(): float|int|null
+  {
+    try {
+      $product = $this->getCurrentProduct();
+
+      $regularPrice = $product->getPriceInfo()->getPrice('regular_price');
+      if (!$regularPrice) {
+        return null;
+      }
+
+      if (!$this->isProductConfigurable($product)) {
+        return null;
+      }
+
+      return $regularPrice->getMinRegularAmount()->getValue() * 100;
+    } catch (NoSuchEntityException) {
+      return null;
+    }
+  }
+
+  protected function isProductConfigurable(ProductInterface $product): bool
+  {
+    return $product->getTypeId() == Configurable::TYPE_CODE;
+  }
+
+  /**
+   * @throws NoSuchEntityException
+   */
+  protected function getCurrentProduct(): ProductInterface
+  {
+    return $this->productRepository->getById($this->getRequest()->getParam('id'));
   }
 }

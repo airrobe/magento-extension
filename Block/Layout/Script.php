@@ -2,23 +2,30 @@
 
 namespace AirRobe\TheCircularWardrobe\Block\Layout;
 
+use AirRobe\TheCircularWardrobe\Helper\Data;
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\Element\Template\Context;
+
 /**
- * [Description Markup]
+ * Class Script
+ * @package AirRobe\TheCircularWardrobe\Block\Layout
+ * @noinspection PhpUnused
+ *
  */
-class Script extends \Magento\Framework\View\Element\Template
+class Script extends Template
 {
-  protected $helper;
+  protected Data $helper;
 
   public function __construct(
-    \Magento\Framework\View\Element\Template\Context $context,
-    \AirRobe\TheCircularWardrobe\Helper\Data $helper,
+    Context $context,
+    Data $helper,
     array $data = []
   ) {
     $this->_helper = $helper;
     parent::__construct($context, $data);
   }
 
-  public function getScriptUrl()
+  public function getScriptUrl(): string
   {
     return $this->_helper->getScriptUrl();
   }
