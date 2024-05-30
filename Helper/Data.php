@@ -1,4 +1,6 @@
 <?php
+/** @noinspection PhpComposerExtensionStubsInspection */
+/** @noinspection PhpMissingClassConstantTypeInspection */
 
 namespace AirRobe\TheCircularWardrobe\Helper;
 
@@ -24,7 +26,7 @@ use Psr\Log\LoggerInterface;
  * @noinspection UsingHelperClassInspection
  * @noinspection PhpUnused
  *
- * Using Helper classes are an anti-pattern in Magento 2. It is recommended to use service classes instead.
+ * Using Helper classes are an anti pattern in Magento 2. It is recommended to use service classes instead.
  * This should be refactored into separate service classes grouped into specific functionality.
  */
 class Data extends AbstractHelper
