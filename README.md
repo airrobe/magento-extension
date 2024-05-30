@@ -57,6 +57,8 @@ Configure the Magento PhpStorm plugin under Settings > PHP > Frameworks > Magent
 
 ### Setup a PHP 8.2 + Magento 2.4.6 clean install and environment
 
+See [markshust/docker-magento](https://github.com/markshust/docker-magento) for more information, options and commands.
+
 - `mkdir docker-magento`
 - `cd docker-magento`
 - `curl -s https://raw.githubusercontent.com/markshust/docker-magento/master/lib/template | bash`
@@ -79,10 +81,14 @@ Configure the Magento PhpStorm plugin under Settings > PHP > Frameworks > Magent
 ```
   cd src/app/code
   mkdir AirRobe
+  cd AirRobe
   git clone git@github.com:airrobe/magento-extension.git TheCircularWardrobe
+  cd ../../../../
   bin/magento module:enable AirRobe_TheCircularWardrobe
-  bin/magento setup:upgrade --keep-generated
+  bin/magento setup:upgrade
   bin/magento cache:flush
 ```
+- Change your git root to the `src/app/code/AirRobe/TheCircularWardrobe` directory [Change VCS project root](https://intellij-support.jetbrains.com/hc/en-us/community/posts/115000087244-Change-VCS-project-root) 
+  - or remove the .git directory from the docker-magento directory [How to change Git root directory?](https://stackoverflow.com/questions/66969576/how-to-change-git-root-directory).
 - You can find the Magento Admin login details in the file `env/magento.env`
 - Submit any changes in a PR to the php82-magento246 branch
