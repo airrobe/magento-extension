@@ -47,36 +47,31 @@ to test the module or contribute to the extension.
 
 See [markshust/docker-magento](https://github.com/markshust/docker-magento) for more information, options and commands.
 
-- Create your project folder
+- Create your project folder and Download the docker-magento template
 ```
 mkdir docker-magento
 cd docker-magento
-````
-
-#### To install Magento 2.4.7 + PHP 8.3, use the following commands:
-```
-curl -s https://raw.githubusercontent.com/markshust/docker-magento/master/lib/onelinesetup | bash -s -- magento.test 2.4.7 community
+curl -s https://raw.githubusercontent.com/markshust/docker-magento/master/lib/template | bash
 ```
 
-#### To install older versions, use the following commands. This example uses Magento 2.4.6 + PHP 8.2:
-- `curl -s https://raw.githubusercontent.com/markshust/docker-magento/master/lib/template | bash`
-- Check the `compose.yaml` file to ensure the PHP version is matches your intended version. For PHP 8.2, the following line should be present:
+- Check the `compose.yaml` file to ensure the PHP version matches your target. For PHP 8.2, the following line should be present:
 ```
 phpfpm:
   image: markoshust/magento-php:8.2-fpm-4
 ```
-- Download and install Magento 2.4.6 with the following
+
+- Download and install Magento with the following command (replace `2.4.7` with the desired version)
 ```
-bin/download 2.4.6 community
-bin/setup magento.test
+bin/download 2.4.7 community
 ```
 
 ### Set up the development environment
 ```
+bin/setup magento.test
 bin/magento sampledata:deploy
+bin/magento setup:upgrade
 bin/composer require markshust/magento2-module-disabletwofactorauth
 bin/magento module:enable MarkShust_DisableTwoFactorAuth
-bin/magento deploy:mode:set developer
 bin/magento setup:upgrade
 ```
 
@@ -95,6 +90,7 @@ bin/magento setup:upgrade
 bin/magento cache:flush
 ```
 
+- See the [documentation](https://connector.airrobe.com/docs/magento) for instructions on how to configure the module.
 - You can find the Magento Admin login details in the file `env/magento.env`
 - Submit a Pull Request and our maintainers will respond as soon as possible
 
