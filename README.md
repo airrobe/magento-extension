@@ -59,37 +59,37 @@ Configure the Magento PhpStorm plugin under Settings > PHP > Frameworks > Magent
 
 See [markshust/docker-magento](https://github.com/markshust/docker-magento) for more information, options and commands.
 
-#### To install Magento 2.4.7 + PHP 8.3, use the following commands:
-```php
+- Create your project folder
+```
 mkdir docker-magento
 cd docker-magento
+````
+
+#### To install Magento 2.4.7 + PHP 8.3, use the following commands:
+```
 curl -s https://raw.githubusercontent.com/markshust/docker-magento/master/lib/onelinesetup | bash -s -- magento.test 2.4.7 community
-bin/magento deploy:mode:set developer
+```
+
+#### To install older versions, use the following commands. This example uses Magento 2.4.6 + PHP 8.2:
+- `curl -s https://raw.githubusercontent.com/markshust/docker-magento/master/lib/template | bash`
+- Check the `compose.yaml` file to ensure the PHP version is matches your intended version. For PHP 8.2, the following line should be present:
+```
+phpfpm:
+  image: markoshust/magento-php:8.2-fpm-4
+```
+- Download and install Magento 2.4.6 with the following
+```
+bin/download 2.4.6 community
+bin/setup magento.test
+```
+
+### Set up the development environment
+```
 bin/magento sampledata:deploy
 bin/composer require markshust/magento2-module-disabletwofactorauth
 bin/magento module:enable MarkShust_DisableTwoFactorAuth
+bin/magento deploy:mode:set developer
 bin/magento setup:upgrade
-```
-
-#### To install older versions, use the following commands. This exmaple uses Magento 2.4.6 + PHP 8.2:
-- `curl -s https://raw.githubusercontent.com/markshust/docker-magento/master/lib/template | bash`
-- Check the `compose.yaml` file to ensure the PHP version is matches your intended version. For PHP 8.2, the following line should be present:
-  ```
-  phpfpm:
-    image: markoshust/magento-php:8.2-fpm-4
-  ```
-- Download and install Magento 2.4.6 with the following
-```
-  bin/download 2.4.6 community
-```
-- Set up the Magento environment
-```
-  bin/setup magento.test
-  bin/magento deploy:mode:set developer
-  bin/magento sampledata:deploy
-  bin/composer require markshust/magento2-module-disabletwofactorauth
-  bin/magento module:enable MarkShust_DisableTwoFactorAuth
-  bin/magento setup:upgrade
 ```
 
 ### Clone the AirRobe magento extension
@@ -97,14 +97,14 @@ bin/magento setup:upgrade
 Add the AirRobe repo into the `app/code` directory and enable the module
 
 ```
-  cd src/app/code
-  mkdir AirRobe
-  cd AirRobe
-  git clone git@github.com:airrobe/magento-extension.git TheCircularWardrobe
-  cd ../../../../
-  bin/magento module:enable AirRobe_TheCircularWardrobe
-  bin/magento setup:upgrade
-  bin/magento cache:flush
+cd src/app/code
+mkdir AirRobe
+cd AirRobe
+git clone git@github.com:airrobe/magento-extension.git TheCircularWardrobe
+cd ../../../../
+bin/magento module:enable AirRobe_TheCircularWardrobe
+bin/magento setup:upgrade
+bin/magento cache:flush
 ```
 
 - Change your git root to the `src/app/code/AirRobe/TheCircularWardrobe` directory [Change VCS project root](https://intellij-support.jetbrains.com/hc/en-us/community/posts/115000087244-Change-VCS-project-root) 
