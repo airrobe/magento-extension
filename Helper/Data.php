@@ -197,27 +197,32 @@ class Data extends AbstractHelper
    */
   public function getProductAttributeByCode(ProductInterface $product, string $attributeCode): string|null
   {
-    if (!$attributeCode)
-      $value = null;
-    elseif ($product->getAttributeText($attributeCode))
-      $value = $product->getAttributeText($attributeCode);
-    else
-      $value = $product->getData($attributeCode);
-
-    if (is_object($value)) {
-      if (method_exists($value, 'getText'))
-        $value = $value->getText();
-      elseif (method_exists($value, 'getValue'))
-        $value = $value->getValue();
+    try {
+      if (!$attributeCode)
+        $value = null;
+      elseif ($product->getAttributeText($attributeCode))
+        $value = $product->getAttributeText($attributeCode);
       else
-        return null;
-    }
+        $value = $product->getData($attributeCode);
 
-    if (is_array($value)) {
-      return implode(", ", $value);
-    }
+      if (is_object($value)) {
+        if (method_exists($value, 'getText'))
+          $value = $value->getText();
+        elseif (method_exists($value, 'getValue'))
+          $value = $value->getValue();
+        else
+          return null;
+      }
 
-    return $value;
+      if (is_array($value)) {
+        return implode(", ", $value);
+      }
+
+      return $value;
+    } catch (Exception $e) {
+      $this->safelySendErrorDetailsToApi($e);
+      return null;
+    }
   }
 
   public function getProductBrand(ProductInterface $product): string|null
@@ -235,9 +240,8 @@ class Data extends AbstractHelper
     return $this->getProductAttributeByCode($product, 'description');
   }
 
-  // Return the category tree string for all active categories for the merchant
-
   /**
+   * Return the category tree string for all active categories for the merchant
    * @throws LocalizedException
    */
   public function getAllCategoryTrees(): array
@@ -295,10 +299,9 @@ class Data extends AbstractHelper
 
   // Send a payload of data to the airrobe connector. Before sending we sign with an APP_ID taken
   // from the config file, and a message signature generated using the HMAC algorithm and a secret
-  // token from the same config file. TODO: I understand that there are dedicated graphql classes
-  // that ship with magento, and it may make sense to start using these. But for now, this CURL
-  // approach is workable (and also avoids any potential compatability issues with our merchant
-  // partner stores)
+  // token from the same config file.
+  // There are dedicated graphql classes that ship with magento, however this CURL
+  // approach avoids any potential compatability issues with our merchant partner stores)
   public function sendToAirRobeAPI($payload): bool|string|null
   {
     $url = $this->getApiUrl();
