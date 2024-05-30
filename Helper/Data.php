@@ -75,11 +75,6 @@ class Data extends AbstractHelper
     );
   }
 
-  public function getGeneralConfig($code, $storeId = null)
-  {
-    return $this->getConfigValue('general/' . $code, $storeId);
-  }
-
   public function isExtensionEnabled()
   {
     return filter_var($this->getConfigValue(self::MODULE_ENABLE), FILTER_VALIDATE_BOOLEAN);
