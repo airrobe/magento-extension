@@ -1,4 +1,5 @@
 <?php
+/** @noinspection PhpMissingClassConstantTypeInspection */
 
 namespace AirRobe\TheCircularWardrobe\Console\Command;
 

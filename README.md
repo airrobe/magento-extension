@@ -11,8 +11,8 @@
 
 ### Software versions
 This release is compatible with:
-- PHP 8.2
-- Magento 2.4.6
+- Magento 2.4.6 + PHP 8.2
+- Magento 2.4.7 + PHP 8.2 or 8.3
 
 ### AirRobe API
 This module requires an AirRobe account and access keys.
@@ -49,27 +49,34 @@ If contributing to this project, we highly recommend using the IDE PhpStorm and 
 - [Magento PhpStorm](https://plugins.jetbrains.com/plugin/8024-magento-phpstorm)
 - [Magento and Adobe Commerce PhpStorm by Atwix](https://plugins.jetbrains.com/plugin/20554-magento-and-adobe-commerce-phpstorm-by-atwix)
 
-Set your PHP Language Level and CLI interpreter to PHP 8.2 under Settings > PHP
+Set your PHP Language Level and CLI interpreter to match your installed PHP version under Settings > PHP
 
 Configure the Magento PhpStorm plugin under Settings > PHP > Frameworks > Magento
 - Set the Magento installation path to `src`
 - Regenerate URN mappings or alternatively run `bin/magento dev:urn-catalog:generate .idea/misc.xml`
 
-### Setup a PHP 8.2 + Magento 2.4.6 clean install and environment
+### Set up a PHP + Magento clean install and environment
 
 See [markshust/docker-magento](https://github.com/markshust/docker-magento) for more information, options and commands.
 
 - `mkdir docker-magento`
 - `cd docker-magento`
 - `curl -s https://raw.githubusercontent.com/markshust/docker-magento/master/lib/template | bash`
-- Modify the `compose.yaml` file with the following changes
+- Check the `compose.yaml` file to ensure the PHP version is matches your intended version. For PHP 8.2, the following line should be present:
   ```
   phpfpm:
     image: markoshust/magento-php:8.2-fpm-4
   ```
-- Download and install Magento 2.4.6 with the following commands
+- Download and install Magento 2.4.6 with the following
 ```
   bin/download 2.4.6 community
+```
+- Or for Magento 2.4.7:
+```
+  bin/download 2.4.7 community
+```
+- Set up the Magento environment
+```
   bin/setup magento.test
   bin/magento deploy:mode:set developer
   bin/magento sampledata:deploy
