@@ -57,8 +57,9 @@ Configure the Magento PhpStorm plugin under Settings > PHP > Frameworks > Magent
 
 ### Setup a PHP 8.2 + Magento 2.4.6 clean install and environment
 
-- `curl -s https://raw.githubusercontent.com/markshust/docker-magento/master/lib/template | bash`
+- `mkdir docker-magento`
 - `cd docker-magento`
+- `curl -s https://raw.githubusercontent.com/markshust/docker-magento/master/lib/template | bash`
 - Modify the `compose.yaml` file with the following changes
   ```
   phpfpm:
