@@ -56,7 +56,7 @@ class Markup extends Template
     }
   }
 
-  public function getProductBrand()
+  public function getProductBrand(): string|null
   {
     try {
       return $this->helper->getProductBrand($this->getCurrentProduct());
@@ -65,7 +65,7 @@ class Markup extends Template
     }
   }
 
-  public function getProductMaterial()
+  public function getProductMaterial(): string|null
   {
     try {
       return $this->helper->getProductMaterial($this->getCurrentProduct());

@@ -197,31 +197,47 @@ class Data extends AbstractHelper
     }
   }
 
-  public function getProductBrand(ProductInterface $product)
+  /**
+   * Since we're not sure how the attribute is stored, we need to check a few places.
+   */
+  public function getProductAttributeByCode(ProductInterface $product, string $attributeCode): string|null
   {
-    $brandAttributeCode = $this->getBrandAttributeCode();
+    if (!$attributeCode)
+      $value = null;
+    elseif ($product->getAttributeText($attributeCode))
+      $value = $product->getAttributeText($attributeCode);
+    else
+      $value = $product->getData($attributeCode);
 
-    if (!$brandAttributeCode) {
-      return null;
+    if (is_object($value)) {
+      if (method_exists($value, 'getText'))
+        $value = $value->getText();
+      elseif (method_exists($value, 'getValue'))
+        $value = $value->getValue();
+      else
+        return null;
     }
 
-    return $product->getAttributeText($brandAttributeCode) ?? null;
-  }
-
-  public function getProductMaterial(ProductInterface $product)
-  {
-    $materialAttributeCode = $this->getMaterialAttributeCode();
-
-    if (!$materialAttributeCode) {
-      return null;
+    if (is_array($value)) {
+      return implode(", ", $value);
     }
 
-    return $product->getAttributeText($materialAttributeCode) ?? null;
+    return $value;
   }
 
-  public function getProductDescription(ProductInterface $product)
+  public function getProductBrand(ProductInterface $product): string|null
   {
-    return $product->getData('description');
+    return $this->getProductAttributeByCode($product, $this->getBrandAttributeCode());
+  }
+
+  public function getProductMaterial(ProductInterface $product): string|null
+  {
+    return $this->getProductAttributeByCode($product, $this->getMaterialAttributeCode());
+  }
+
+  public function getProductDescription(ProductInterface $product): string
+  {
+    return $this->getProductAttributeByCode($product, 'description');
   }
 
   // Return the category tree string for all active categories for the merchant
@@ -298,7 +314,6 @@ class Data extends AbstractHelper
     $this->_logger->debug("[AIRROBE] URL: " . $url);
     $this->_logger->debug("[AIRROBE] APP_ID: " . $appId);
     $this->_logger->debug("[AIRROBE] PAYLOAD: " . $json_payload);
-    $this->_logger->debug("[AIRROBE] SIGNATURE: " . $signature);
 
     $headers = [
       'Content-Type: application/json',

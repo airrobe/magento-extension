@@ -12,8 +12,10 @@ use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\UrlInterface;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Item;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Exception;
+use Psr\Log\LoggerInterface as Logger;
 
 /**
  * Class OrderProcessingService
@@ -22,6 +24,7 @@ use Exception;
  */
 class OrderProcessingService
 {
+  protected Logger $_logger;
   protected Data $helperData;
   protected Markup $markup;
   protected ResourceConnection $resourceConnection;
@@ -33,6 +36,7 @@ class OrderProcessingService
   protected Configurable $_configurableProduct;
 
   public function __construct(
+    Logger                            $logger,
     Data                              $helperData,
     Markup                            $markup,
     UrlInterface                      $urlInterface,
@@ -43,6 +47,7 @@ class OrderProcessingService
     Product                           $product,
     Configurable                      $configurableProduct)
   {
+    $this->_logger = $logger;
     $this->helperData = $helperData;
     $this->markup = $markup;
     $this->_urlInterface = $urlInterface;
@@ -107,9 +112,13 @@ class OrderProcessingService
   }
 
   /**
+   * @param Item $item
+   * @param $currency
+   * @param $imageUrls
+   * @return array
    * @throws NoSuchEntityException
    */
-  public function lineItemData($item, $currency, $imageUrls): array
+  public function lineItemData(Item $item, $currency, $imageUrls): array
   {
     $product = $this->_productRepository->getById($item->getProductId());
 
@@ -124,7 +133,7 @@ class OrderProcessingService
       'productType' => $this->helperData->getFirstProductCategory($product),
       'heroImageUrl' => $heroImageUrl,
       'additionalImageUrls' => $imageUrls,
-      'productAttributes' => $this->getItemProductOptions($item),
+      'productAttributes' => $this->getItemProductAttributes($item),
       'paidPrice' => [
         'cents' => $item->getPrice() * 100,
         'currency' => $currency,
@@ -139,24 +148,23 @@ class OrderProcessingService
   // Workaround for an issue with Magento2 in which the getVisibleItems() method also returns simple
   // (non-visible) items inside the observer context. See:
   // https://community.magento.com/t5/Magento-2-x-Programming/getAllVisibleItems-shows-both-configurable-and-parent-products/td-p/83184
-  public function getVisibleLineItems($order): array
+  /**
+   *
+   * Workaround for an issue with Magento2 in which the getVisibleItems() method also returns simple
+   * (non-visible) items inside the observer context. See:
+   * https://community.magento.com/t5/Magento-2-x-Programming/getAllVisibleItems-shows-both-configurable-and-parent-products/td-p/83184
+   * @param Order $order
+   * @return Item[]
+   */
+  public function getVisibleLineItems(Order $order): array
   {
-    return array_filter(
-      $order->getAllItems(),
-      function ($item) {
-        // Exclude line items with a parent item, as they are duplicates with incomplete data
-        if ($item->getParentItem() != null) {
-          return false;
-        }
-
-        // Exclude downloadable products as they can't be added to airrobe
-        if ($item->getProductType() == "downloadable") {
-          return false;
-        }
-
-        return true;
+    $items = [];
+    foreach ($order->getAllItems() as $item) {
+      if (!$item->isDeleted() && !$item->getParentItem() && $item->getProductType() != "downloadable") {
+        $items[] = $item;
       }
-    );
+    }
+    return $items;
   }
 
   // Return an array with all image URLs, indexed by the "canonical" product id. This is necessary
@@ -207,25 +215,54 @@ class OrderProcessingService
     return $parents[0] ?? null;
   }
 
-  // Return an array of product options of the form { 'name' => 'size', 'value' => 'small' }
-  public function getItemProductOptions($item): array
-  {
-    $productOptionAttributes = $item->getProductOptions()['attributes_info'];
 
-    // Some product types, including simple / grouped products, don't have attributes
-    if (!isset($productOptionAttributes)) {
+  /**
+   * Return an array of product options of the form { 'name' => 'size', 'value' => 'small' }
+   * @param Item $item
+   * @return array
+   */
+  public function getItemProductOptions(Item $item): array
+  {
+    $productOptions = $item->getProductOptions();
+
+    if (!array_key_exists('attributes_info', $productOptions)) {
       return [];
     }
 
+    $productOptionAttributes = $productOptions['attributes_info'];
+
     // Return our options in an array with "name" and "value" keys
-    $productOptions = [];
+    $options = [];
     foreach ($productOptionAttributes as $option) {
-      $productOptions[] = [
+      $options[] = [
         'name' => $option['label'],
         'value' => $option['value']
       ];
     }
 
-    return $productOptions;
+    return $options;
+  }
+
+  /**
+   * Return an array of product options of the form { 'name' => 'size', 'value' => 'small' }
+   * @param Item $item
+   * @return array
+   */
+  public function getItemProductAttributes(Item $item): array
+  {
+    $options = $this->getItemProductOptions($item);
+
+    $product = $item->getProduct();
+    $productAttributes = $product->getCustomAttributes();
+
+    foreach ($productAttributes as $attribute) {
+      $attributeCode = $attribute->getAttributeCode();
+      $options[] = array(
+        'name' => $attribute->getAttributeCode(),
+        'value' => $this->helperData->getProductAttributeByCode($product, $attributeCode)
+      );
+    }
+
+    return $options;
   }
 }
