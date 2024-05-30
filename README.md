@@ -59,8 +59,19 @@ Configure the Magento PhpStorm plugin under Settings > PHP > Frameworks > Magent
 
 See [markshust/docker-magento](https://github.com/markshust/docker-magento) for more information, options and commands.
 
-- `mkdir docker-magento`
-- `cd docker-magento`
+#### To install Magento 2.4.7 + PHP 8.3, use the following commands:
+```php
+mkdir docker-magento
+cd docker-magento
+curl -s https://raw.githubusercontent.com/markshust/docker-magento/master/lib/onelinesetup | bash -s -- magento.test 2.4.7 community
+bin/magento deploy:mode:set developer
+bin/magento sampledata:deploy
+bin/composer require markshust/magento2-module-disabletwofactorauth
+bin/magento module:enable MarkShust_DisableTwoFactorAuth
+bin/magento setup:upgrade
+```
+
+#### To install older versions, use the following commands. This exmaple uses Magento 2.4.6 + PHP 8.2:
 - `curl -s https://raw.githubusercontent.com/markshust/docker-magento/master/lib/template | bash`
 - Check the `compose.yaml` file to ensure the PHP version is matches your intended version. For PHP 8.2, the following line should be present:
   ```
@@ -71,10 +82,6 @@ See [markshust/docker-magento](https://github.com/markshust/docker-magento) for 
 ```
   bin/download 2.4.6 community
 ```
-- Or for Magento 2.4.7:
-```
-  bin/download 2.4.7 community
-```
 - Set up the Magento environment
 ```
   bin/setup magento.test
@@ -84,7 +91,11 @@ See [markshust/docker-magento](https://github.com/markshust/docker-magento) for 
   bin/magento module:enable MarkShust_DisableTwoFactorAuth
   bin/magento setup:upgrade
 ```
-- Add the AirRobe repo into the `app/code` directory and enable the module
+
+### Clone the AirRobe magento extension
+
+Add the AirRobe repo into the `app/code` directory and enable the module
+
 ```
   cd src/app/code
   mkdir AirRobe
@@ -95,7 +106,8 @@ See [markshust/docker-magento](https://github.com/markshust/docker-magento) for 
   bin/magento setup:upgrade
   bin/magento cache:flush
 ```
+
 - Change your git root to the `src/app/code/AirRobe/TheCircularWardrobe` directory [Change VCS project root](https://intellij-support.jetbrains.com/hc/en-us/community/posts/115000087244-Change-VCS-project-root) 
   - or remove the .git directory from the docker-magento directory [How to change Git root directory?](https://stackoverflow.com/questions/66969576/how-to-change-git-root-directory).
 - You can find the Magento Admin login details in the file `env/magento.env`
-- Submit any changes in a PR to the php82-magento246 branch
+- Submit a Pull Request and our maintainers will respond as soon as possible
