@@ -67,7 +67,7 @@ Configure the Magento PhpStorm plugin under Settings > PHP > Frameworks > Magent
   ```
 - Download and install Magento 2.4.6 with the following commands
 ```
-  bin/download 2.4.6 community`
+  bin/download 2.4.6 community
   bin/setup magento.test
   bin/magento deploy:mode:set developer
   bin/magento sampledata:deploy
