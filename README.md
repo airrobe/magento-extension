@@ -1,6 +1,8 @@
 # Magento2 Module AirRobe - TheCircularWardrobe
 
-    ``airrobe/thecircularwardrobe``
+```
+   airrobe/thecircularwardrobe
+```
 
 ## Table of contents
  - [Requirements](#requirements)
