@@ -38,6 +38,15 @@ Once you have an account, login in to our [Connector Dashboard](https://connecto
 
 Once installed, login in to our [Connector Dashboard](https://connector.airrobe.com) and view the [documentation](https://connector.airrobe.com/docs/magento) for instructions on how to configure the module.
 
+### Uninstalling the AirRobe extension
+ - Disable the module by running `php bin/magento module:disable AirRobe_TheCircularWardrobe`
+ - Run `php bin/magento setup:upgrade`
+ - Remove the module by running `composer remove airrobe/thecircularwardrobe`
+ - Flush the Magento cache by running `bin/magento cache:flush`
+ - Remove the module by running 
+   - Type 1: `rm -rf app/code/AirRobe/TheCircularWardrobe`
+   - Type 2: `composer remove airrobe/thecircularwardrobe`
+
 ## Contributing
 
 Use these steps to create your own environment with a clean magento install with dummy data
@@ -109,3 +118,11 @@ Configure the Magento PhpStorm plugin under Settings > PHP > Frameworks > Magent
 Change your VCS root to the `src/app/code/AirRobe/TheCircularWardrobe` directory [Change VCS project root](https://intellij-support.jetbrains.com/hc/en-us/community/posts/115000087244-Change-VCS-project-root)
 
 Or remove the .git directory from the docker-magento directory [How to change Git root directory?](https://stackoverflow.com/questions/66969576/how-to-change-git-root-directory).
+
+### Clearing the Magento install
+
+If you want to completely clear the magento install in your local environment, `cd` to the root directory and run
+```
+bin/removeall 
+rm -rf .* *
+```
