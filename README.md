@@ -34,19 +34,19 @@ Once you have an account, login in to our [Connector Dashboard](https://connecto
 
 ### Type 2: Composer
  - Install the module composer by running `composer require airrobe/thecircularwardrobe`
- - enable the module by running `bin/magento module:enable AirRobe_TheCircularWardrobe`
- - apply database updates by running `bin/magento setup:upgrade --keep-generated`
- - Flush the cache by running `bin/magento cache:flush`
+ - enable the module by running `php bin/magento module:enable AirRobe_TheCircularWardrobe`
+ - apply database updates by running `php bin/magento setup:upgrade --keep-generated`
+ - Flush the cache by running `php bin/magento cache:flush`
 
 Once installed, login in to our [Connector Dashboard](https://connector.airrobe.com) and view the [documentation](https://connector.airrobe.com/docs/magento) for instructions on how to configure the module.
 
 ### Uninstalling the AirRobe extension
- - Disable the module by running `bin/magento module:disable AirRobe_TheCircularWardrobe`
- - Run `bin/magento setup:upgrade`
+ - Disable the module by running `php bin/magento module:disable AirRobe_TheCircularWardrobe`
+ - Run `php bin/magento setup:upgrade`
  - Remove the module by running
    - Type 1: `rm -rf src/app/code/AirRobe`
    - Type 2: `composer remove airrobe/thecircularwardrobe`
- - Flush the Magento cache by running `bin/magento cache:flush`
+ - Flush the Magento cache by running `php bin/magento cache:flush`
 
 ## Contributing
 
