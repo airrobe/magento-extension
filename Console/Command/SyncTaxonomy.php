@@ -49,9 +49,9 @@ class SyncTaxonomy extends Command
      * @param InputInterface  $input
      * @param OutputInterface $output
      *
-     * @return void
+     * @return int
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
             $response = $this->helperData->sendToAirRobeAPI(
@@ -69,6 +69,8 @@ class SyncTaxonomy extends Command
             );
 
             $output->writeln('<comment>Result of taxonomy sync: ' . $response . '</comment>');
+
+            return 0;
         } catch (Exception $e) {
             $output->writeln(
                 '<error> ' . sprintf(
@@ -77,6 +79,8 @@ class SyncTaxonomy extends Command
                     $e->getMessage()
                 ) .  '</error>'
             );
+
+            return 1;
         }
     }
 }
