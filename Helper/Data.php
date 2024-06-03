@@ -219,7 +219,7 @@ class Data extends AbstractHelper
       }
 
       return $value;
-    } catch (Exception $e) {
+    } catch (\Throwable $e) {
       $this->safelySendErrorDetailsToApi($e);
       return null;
     }
