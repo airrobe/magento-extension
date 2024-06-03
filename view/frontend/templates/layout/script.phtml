@@ -1,6 +1,11 @@
 <?php
 use AirRobe\TheCircularWardrobe\Block\Layout\Script;
 
-/** @var Script $block */
+try {
+    /** @var Script $block */
+    $scriptUrl = $block->getScriptUrl();
+} catch (\Throwable $e) {
+    $scriptUrl = '';
+}
 ?>
-<script src="<?php echo $block->getScriptUrl(); ?>" type="text/javascript" src_type="url"></script>
+<script src="<?= $scriptUrl ?>" type="text/javascript" src_type="url"></script>

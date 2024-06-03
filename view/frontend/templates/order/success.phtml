@@ -1,10 +1,19 @@
 <?php
 use AirRobe\TheCircularWardrobe\Block\Order\Success;
 
-/** @var Success $block */
+try {
+    /** @var Success $block */
+    $appId = $block->getAppId();
+    $orderId = $block->getOrderId();
+    $email = $block->getEmail();
+} catch (\Throwable $e) {
+    $appId = '';
+    $orderId = '';
+    $email = '';
+}
 ?>
 <airrobe-confirmation
-  app-id="<?php echo $block->getAppId(); ?>"
-  order-id="<?php echo $block->getOrderId(); ?>"
-  email="<?php echo $block->getEmail(); ?>">
+  app-id="<?= $appId ?>"
+  order-id="<?= $orderId ?>"
+  email="<?= $email ?>">
 </airrobe-confirmation>

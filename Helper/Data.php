@@ -192,10 +192,13 @@ class Data extends AbstractHelper
     }
   }
 
-  /**
-   * Since we're not sure how the attribute is stored, we need to check a few places.
-   */
-  public function getProductAttributeByCode(ProductInterface $product, string $attributeCode): string|null
+    /**
+     * Since we're not sure how the attribute is stored, we need to check a few places.
+     * @param ProductInterface $product
+     * @param string|null $attributeCode
+     * @return string|null
+     */
+  public function getProductAttributeByCode(ProductInterface $product, string $attributeCode = null): string|null
   {
     try {
       if (!$attributeCode)

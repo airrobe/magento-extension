@@ -1,13 +1,28 @@
 <?php
 use AirRobe\TheCircularWardrobe\Block\Product\View\Markup;
 
-/** @var Markup $block */
+try {
+    /** @var Markup $block */
+    $appId = $block->getAppId();
+    $category = $block->getFirstProductCategory();
+    $priceCents = $block->getProductPriceCents();
+    $originalFullPriceCents = $block->getProductOriginalFullPriceCents();
+    $brand = $block->getProductBrand();
+    $material = $block->getProductMaterial();
+} catch (\Throwable $e) {
+    $appId = '';
+    $category = '';
+    $priceCents = '';
+    $originalFullPriceCents = '';
+    $brand = '';
+    $material = '';
+}
 ?>
 <airrobe-opt-in
-  app-id="<?php echo $block->getAppId(); ?>"
-  category="<?php echo $block->getFirstProductCategory(); ?>"
-  price-cents="<?php echo $block->getProductPriceCents(); ?>"
-  original-full-price-cents="<?php echo $block->getProductOriginalFullPriceCents(); ?>"
-  brand="<?php echo $block->getProductBrand(); ?>"
-  material="<?php echo $block->getProductMaterial(); ?>">
+  app-id="<?= $appId ?>"
+  category="<?= $category ?>"
+  price-cents="<?= $priceCents ?>"
+  original-full-price-cents="<?= $originalFullPriceCents ?>"
+  brand="<?= $brand ?>"
+  material="<?= $material ?>">
 </airrobe-opt-in>
