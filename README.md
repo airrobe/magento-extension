@@ -44,7 +44,7 @@ Once installed, login in to our [Connector Dashboard](https://connector.airrobe.
  - Disable the module by running `bin/magento module:disable AirRobe_TheCircularWardrobe`
  - Run `bin/magento setup:upgrade`
  - Remove the module by running
-   - Type 1: `rm -rf app/code/AirRobe/TheCircularWardrobe`
+   - Type 1: `rm -rf app/code/AirRobe`
    - Type 2: `composer remove airrobe/thecircularwardrobe`
  - Flush the Magento cache by running `bin/magento cache:flush`
 
