@@ -14,7 +14,7 @@
 ### Software versions
 This release is compatible with:
 - Magento 2.4.6 + PHP 8.2
-- Magento 2.4.7 + PHP 8.2 or 8.3
+- Magento 2.4.7 + PHP 8.3
 
 ### AirRobe API
 This module requires an AirRobe account and access keys.
