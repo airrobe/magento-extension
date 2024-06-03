@@ -301,7 +301,7 @@ class Data extends AbstractHelper
   // from the config file, and a message signature generated using the HMAC algorithm and a secret
   // token from the same config file.
   // There are dedicated graphql classes that ship with magento, however this CURL
-  // approach avoids any potential compatability issues with our merchant partner stores)
+  // approach avoids any potential compatability issues with our merchant partner stores.
   public function sendToAirRobeAPI($payload): bool|string|null
   {
     $url = $this->getApiUrl();
