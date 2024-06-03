@@ -123,6 +123,12 @@ Or remove the .git directory from the docker-magento directory [How to change Gi
 
 ### Clearing the Magento install
 
+Sometimes you may need to clear the Magento install to start fresh, especially when an error occurs during setup.
+You might get an error message like 
+```
+[InvalidArgumentException]                         
+  Project directory "/var/www/html/." is not empty. 
+```
 If you want to completely clear the magento install in your local environment, `cd` to the root directory and run
 ```
 bin/removeall 
