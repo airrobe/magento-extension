@@ -41,8 +41,8 @@ Once you have an account, login in to our [Connector Dashboard](https://connecto
 Once installed, login in to our [Connector Dashboard](https://connector.airrobe.com) and view the [documentation](https://connector.airrobe.com/docs/magento) for instructions on how to configure the module.
 
 ### Uninstalling the AirRobe extension
- - Disable the module by running `php bin/magento module:disable AirRobe_TheCircularWardrobe`
- - Run `php bin/magento setup:upgrade`
+ - Disable the module by running `bin/magento module:disable AirRobe_TheCircularWardrobe`
+ - Run `bin/magento setup:upgrade`
  - Remove the module by running `composer remove airrobe/thecircularwardrobe`
  - Flush the Magento cache by running `bin/magento cache:flush`
  - Remove the module by running 
