@@ -100,6 +100,9 @@ bin/magento setup:upgrade
 bin/magento cache:flush
 ```
 
+### Additional Information
+
+- If testing the composer install on this magento install, use `bin/composer`. Using `composer` will not register the module correctly on this environment.
 - See the [documentation](https://connector.airrobe.com/docs/magento) for instructions on how to configure the module.
 - You can find the Magento Admin login details in the file `env/magento.env`
 - Submit a Pull Request and our maintainers will respond as soon as possible
